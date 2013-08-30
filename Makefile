@@ -1,5 +1,5 @@
 # Programs
-TEX := bin/pylatex
+TEX := python bin/pylatex
 
 
 all: docs
