@@ -1,0 +1,54 @@
+#!/bin/env python3
+from tempfile import mkdtemp
+import os
+import sys
+import subprocess
+import shutil
+
+def readLogfile(filename):
+	OK    = object()
+	ERROR = object()
+	EXPLA = object()
+	ERRORED = False
+	RERUN   = False
+	last = ""
+	state = OK
+	
+	with open(filename) as logfile:
+		for line in logfile:
+			line = line.strip()
+			RERUN |= line == "LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right."
+			if state is OK and line.startswith("!"):
+				print(last)
+				state = ERROR
+				ERRORED = True
+			if state in [ERROR, EXPLA]:
+				print(line)
+				if not line:
+					state = OK if state is EXPLA else EXPLA
+			last = line
+	return not RERUN or ERRORED
+
+def compile(input, output):
+	tmp = mkdtemp(suffix="tex")
+	try:
+#		print(tmp)
+		while True:
+			proc = subprocess.Popen(["pdflatex", "-interaction", "batchmode", "-output-directory=" + tmp, input], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+			proc.communicate()
+			outfile = "%s.pdf" % os.path.splitext(os.path.basename(input))[0]
+			logfile = "%s.log" % os.path.splitext(os.path.basename(input))[0]
+			if readLogfile(os.path.join(tmp, logfile)):
+				break
+		shutil.copy2(os.path.join(tmp, outfile), output)
+	finally:
+		shutil.rmtree(tmp)
+		pass
+
+
+cwd = os.getcwd()
+input = os.path.abspath(sys.argv[1])
+output = os.path.abspath(sys.argv[2])
+
+compile(input, output)
+
