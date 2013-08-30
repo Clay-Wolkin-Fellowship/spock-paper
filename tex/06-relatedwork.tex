@@ -1,0 +1,59 @@
+\section{Related Work}
+
+Creating good cache line replacement policies is a well
+studied area of computer architecture, and several recent papers have
+worked on this problem.  In general it is the goal of every cache
+policy design to keep around truly reused data while evicting data
+that will not be reused for a very long time, but we mention here as
+related work the
+studies whose approach explicitly looks at reuse distance or some
+variation of it as a part of its design or motivation.
+
+SCAVENGER CITATION investigates the concept of eviction-use distance
+as motivation for their Scavenger LLC architecture, which identifies
+cache blocks that are recently missed in the LLC, and then puts them
+into a separate region of cache that protects them from their frequent
+eviction.  In their motivation for this work, SCAVEGNER CITATION
+mentions large Eviction-Use distance as one of the major contributors
+to the problem and presents static values for Eviction-Use distance
+for several benchmarks.  This differs from TTR visualization in that
+they distilled the entire phenomenon down into a single value, and
+TTR visualization shows the spectrum of all eviction-use distances.
+
+Keramidas et. al. CITATION, seek to genuinely predict the reuse
+distance of cache blocks by using the program counter (PC) of a memory
+access to index into a predictor structure, which is updated when a
+reuse has been detected.  TTR visualization does not take the PC of
+memory operations into account when plotting out recaching time,
+although it could be interesting for future work to look at the TTR
+graphs for each individual memory operation PC in a program.
+
+Manikantan et. al. CITATION, identify delinquent memory operation PCs
+and track
+histograms of the next-use of the cache blocks brought in by them.
+Some of the ways of the LLC are dedicated to blocks brought in by the
+delinquent PCs, so that they do not pollute the rest of the ways.
+This work only tracks reuse within a few dozen LLC misses of when a
+block is last accessed, so their notion of reuse is much mor
+resitricted than that in TTR visualization.
+
+%The methods used
+%in this paper attempt to make the decision primarily based on how
+%recently each line was last used. Another metric for anticipating
+%line
+%reuse is to track the frequency with which each line is
+%accessed. Traditionally\cite{belady66}, a LFU policy would evict the
+%line that is used least frequently while the LRU policy evicts based
+%on the least recently accessed line. Several studies have used a
+%hybrid approach to improve the
+%performance\cite{leechoi01,oneiloneil93,robinsondevarakonda90}
+%but they require several parameters to be tuned on a per-workload
+%basis. Self-tuning adaptive
+%policies\cite{megiddomodha03,bansalmodha04,subramaniansmaragdakis06}
+%exist, however they significantly increase the hardware overhead and
+%complexity. The hardware overhead and complexity can be reduced via
+%hybrid cache
+%replacement\cite{qureshijaleel07}. Hybrid cache replacement uses set
+%dueling to dynamically choose between multiple replacement policies,
+%which can lead to increased performance, but necessitates additional
+%hardware and verification.

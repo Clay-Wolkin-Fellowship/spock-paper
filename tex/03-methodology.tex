@@ -1,0 +1,71 @@
+\section{Time To Recache}
+
+In this work we propose the Time to Recache (TTR) methodology for
+examining the behavior and effectiveness of the LLC.  TTR is defined
+as the amount of time (measured in cycles or seconds) that a cache
+block spends outside of the cache after it has been evicted and
+before it is accessed again.  Note that this is distinct from the
+concept of reuse distance.  Reuse distance is the time between
+successive accesses to a piece of data or cache block.  TTR doesn't
+take into account the amount of time a cache block spent in the LLC
+before it was evicted.  TTR is only concerned with the time spent
+after eviction and before reuse.
+
+Belady's optimal algorithm~\cite{belady66} for cache eviction always
+evicts
+the cache block whose reuse is furthest in the future, allowing that
+free space to be used as long as possible by other data before being
+recached.  It is impossible to know at runtime for general workloads
+which cache block has the furthest reuse distance, hence why there are
+so many different caching policies that use various heuristics in an
+effort to approach the effectiveness of this optimal algorithm.
+
+Measuring the IPC and MPKI of a workload using one caching policy, and
+comparing that to the IPC and MPKI of running that workload with a
+different caching policy can give you some sense of how close each of
+those caching policy comes to the optimal solution.  This is,
+however, and indirect approach to quantifying how well a caching
+policy is performing.  Tracking the TTR is a direct means of
+comparing two caching policies.
+
+TTR is an effective metric because it asks the question every time a
+cache block is brought into the cache, ``have I seen this block
+before, and if so, how long ago was it?''  If caching policy A answers
+this question with ``4000 cycles ago,'' and caching policy B answers
+this question with ``6000 cycles ago,'' then caching policy B has done
+a better job at evicting that cache block early and allowing that
+space to be used by other data.  With TTR, a higher number is better.
+A low TTR number means that the cache block was evicted and then
+recached very soon afterwards, suggesting that it should not have
+been evicted in the first place.
+
+In FIGURE HERE, we see an example of a TTR graph.  A TTR graph is a
+line-graph representation of a histogram of TTR values.  The majority
+of
+the results in this paper are presented in this format.  The bins of a
+TTR graph, along the X-axis,  are 10,000 cycle-long periods of time
+that a cache block has
+been absent from the cache before returning.  The Y-axis of the graph
+is the number of cache blocks that were absent from the cache for that
+long before returning.  For example, if 10 cache blocks had been
+recached after being absent from the cache for 40,000 cycles each,
+then the 4th bin of the graph would have the value of 10.
+
+A TTR graph shows the distribution of how long cache blocks were
+absent.  The intuition of how to read a TTR graph is as follows.  A
+high Y value is generally bad, because it means there were many
+evictions
+and recaches.  Similarly, recaches that happen at a low TTR bin number
+(low X value in the graph) are considered bad because it means that
+when a cache block was evicted it was soon recached, suggesting that
+cache block should not have been evicted in the first place.  Many TTR
+graphs include humps in their distribution.  Humps that appear at low
+TTR values are generally worse than humps that appear at high TTR
+values, although the magnitude of the hump must also be considered.
+High magnitude humps are generally worse than low magnitude humps,
+although the position of these humps must also be considered.
+
+The particular TTR graph in FIGURE HERE is comprised of four TTR
+graphs positioned one above another, each of them representing one of
+four different runs of the same benchmark, but using different caching
+policies.  TODO FINISH THIS

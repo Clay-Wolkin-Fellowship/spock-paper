@@ -1,0 +1,54 @@
+\section{System Performance Metrics}
+
+Computer performance is dependent on a variety of factors, ranging
+from very low level features like the latency of individual functional
+units, bypass networks,
+and out-of-order hardware, up through very high level features such as
+operating systems, disk I/O, and network latency.  In this paper we
+are focusing our attention on the performance of the LLC.  The quality
+of an LLC is typically gauged by two factors, the improvement in
+performance, measured in Instructions Per Clock (IPC),
+that it affords to the processor it backs, and the reduction of Misses
+Per
+1000 Instructions (MPKI), which equates to a reduction in the
+number of long latency DRAM main memory accesses.
+
+\subsection{IPC}
+
+The number of instructions a CPU can complete in a single clock cycle
+can be equated with its absolute performance.  If a processor can
+complete more instructions in a given clock cycle than another,
+its performance is better.  Hardware caches play a critical role in
+boosting this number.  The closer that data sits to the functional
+units, the higher performance can be.  In a typical three level cache
+hierarchy, it can take 10x longer to access the third level of
+cache than the first, and another 10x longer to access main memory.
+Finding data as close to the processor as possible is critical for
+high performance.
+
+\subsection{MPKI}
+
+One of the LLC's main jobs is to redue the number of DRAM accesses
+that are
+performed.  Each DRAM read access includes occupying a memory
+controller's read buffer, waiting for this access's turn, and then
+sending that read request across long wires to distant DRAM chips,
+activating those DRAM chips, and then finally sending the data back to
+the memory controller over several more cycles.  This description of
+events omits what happens to the data after it gets back to the memory
+controller, and also ignores the consequences of needing to write
+dirty data from the LLC back to the cache.  There is a lot of work
+that has to be done in the event of an LLC miss, so reducing the MPKI
+of a cache is a popular and important metric to look at.
+
+%\subsection{More of the Story}
+% This needs work
+%
+%Measuring IPC and MPKI can tell you about how well your LLC is
+%performing, but they don't tell you about what's going on inside the
+%LLC to provide the performance.  Looking at IPC alone does not tell
+%you anything about where to attribute the increase in performance.
+%Similarly, looking at MPKI alone does not tell you about the
+%underlying memory access patterns that caused that MPKI.  In this
+%paper, we look at the Time to Recache (TTR) metric in order to get a
+%more complete view of the behavior of an LLC.
