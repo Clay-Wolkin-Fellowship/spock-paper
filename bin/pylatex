@@ -5,6 +5,12 @@ import sys
 import subprocess
 import shutil
 
+class IgnorableError(Exception):
+	def __init__(self, value):
+		self.value = value
+	def __str__(self):
+		return repr(self.value)
+
 def readLogfile(filename):
 	OK    = object()
 	ERROR = object()
@@ -32,7 +38,6 @@ def readLogfile(filename):
 def compile(input, output):
 	tmp = mkdtemp(suffix="tex")
 	try:
-#		print(tmp)
 		while True:
 			proc = subprocess.Popen(["pdflatex", "-interaction", "batchmode", "-output-directory=" + tmp, input], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 			proc.communicate()
@@ -40,7 +45,10 @@ def compile(input, output):
 			logfile = "%s.log" % os.path.splitext(os.path.basename(input))[0]
 			if readLogfile(os.path.join(tmp, logfile)):
 				break
-		shutil.copy2(os.path.join(tmp, outfile), output)
+		try:
+			shutil.copy2(os.path.join(tmp, outfile), output)
+		except IOError as e:
+			raise IgnorableError(e)
 	finally:
 		shutil.rmtree(tmp)
 		pass
@@ -50,5 +58,8 @@ cwd = os.getcwd()
 input = os.path.abspath(sys.argv[1])
 output = os.path.abspath(sys.argv[2])
 
-compile(input, output)
+try:
+	compile(input, output)
+except IgnorableError:
+	pass
 
