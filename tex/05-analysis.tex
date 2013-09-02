@@ -1,30 +1,13 @@
-\section{Results}
+\section{Analysis}
 
-In this section we show the results of TTR tracking for our different
-benchmarks and cache management policies.  We also include IPC and
-MPKI numbers for comparison.  As stated
-earlier, the purpose of this paper is not to showcase the relative
-performance of one caching policy over another, but is rather to show
-the effectiveness of the TTR visualization method at giving some
-additional insight into system performance.
-Furthermore, no attempt was made to ensure that the simulation windows
-we used in gathering these statistics is necessarily representative of
-program execution overall.  For this reason, our performance numbers
-for the cache policies considered here may differ from previously
-published
-results for those cache policies.  Our goal is merely to show that TTR
-visualization is a useful way to explain the performance we observed.
+We chose sp_omp because it showed an interesting distribution of Memory Accesses to Recache (MATR).
+	We have plotted several cache replacemant algorithms against Belady's Optimal Algorithm.
+	As you can see all cache algorithms have a lot of replacements under 100 K memory accesses from eviction.
+	However, there are 3 peaks 250 K, 300 K, and 350 K memory accesses, with similar peaks in the other replacement algorithms.
+	As expected MRU quickly recaches most of the evicted data.
+	More interesting is that SRRIP, LRU, and FIFO, have shifted the peak slightly earlier, meaning that they cache the results slightly longer than possible.
+	Meanwhile, RAND and NRU_RAND spread out the peak more, which is expected given the inherent randomness in each of the algorthims.
+	DRRIP and BRRIP managed to determine roughly half the time that some of the lines are not going to be used for a long time and release them.
+	This shows the ability have DRRIP and BRRIP to determine quickly which memory locations are not going to be used in a long time,
+		this is advantageous because it frees up cache lines for data which would be used sooner.
 
-Our results are presented by showing the TTR graphs for LRU, NRU,
-SRRIP, and DRRIP for each of the benchmarks, using both 4~MB and
-8~MB.  The third graph shows the IPC and MPKI for each of those runs,
-again separated by the two different cache sizes.  We have organized
-the figures this way to make it easier to compare the shapes of the
-TTR visualizations with the observed IPCs and MPKIs for each
-benchmark.  When looking at the TTR visualizations for a given
-benchmark and a given cache size, the scale for all four component
-graphs (LRU, NRU, SRRIP, and DRRIP) is the same in both X and Y
-directions, so they are all directly comparable.  When moving between
-the 4~MB and 8~MB visualizatoins, the scales may be different.
-
-****RESULTS GO HERE****
