@@ -11,3 +11,9 @@ We chose sp_omp because it showed an interesting distribution of Memory Accesses
 	This shows the ability have DRRIP and BRRIP to determine quickly which memory locations are not going to be used in a long time,
 		this is advantageous because it frees up cache lines for data which would be used sooner.
 
+This visualization allows cache designers to understand more clearly if the algorithm is having its intended effect.
+	For instance as previously mentioned DRRIP and BRRIP both appear to split the difference between SRRIP and Belady.
+	This means that BRRIP's improvements are working in these cases, and BRRIP is more often able to determine when something will not be used for a long time.
+	However DRRIP looks very similar to BRRIP, although you would expect it to be able to move the rest of the peak over.
+	This is not the case, and clearly there is room to improve to be the same as belady.
+
