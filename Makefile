@@ -11,7 +11,7 @@ clean:
 
 docs: build/docs/spock.pdf
 
-build/docs/%.pdf : tex/%.tex
+build/docs/%.pdf : tex/%.tex tex/*.tex
 	@mkdir -p $(@D)
 	$(TEX) $< $@
 
