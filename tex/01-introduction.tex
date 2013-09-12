@@ -12,23 +12,24 @@ processor right now, then a long latency and high energy access to
 main memory is used to fetch the data into the caches so it will be
 available for the next time that data is accessed.
 
-The Last Level Cache (LLC) is especially important for performance
-because it represents the last opportunity for a memory access to
-remain on-chip, without having to fetch data from the DRAM main
-memory.  While an LLC cache hit may take 10x more cycles to complete
-than an L1 hit, an LLC miss takes an additional 10x longer to
-service.  An LLC miss not only takes longer to complete, but
-activating the
-DRAM system also uses more energy to service the request.  From an
-energy perspective, an LLC hit consumes only the energy to service the
-memory request by the LLC.  On the other hand, an LLC miss requires
-the energy to
-check the LLC, notice that it's a miss, and then fetch the data from
-DRAM, possibly also needing to write back dirty data to DRAM which has
-been
-displaced by the incoming data. 
+%%% LLC isn't relevant to this paper (jbs)
+%% The Last Level Cache (LLC) is especially important for performance
+%% because it represents the last opportunity for a memory access to
+%% remain on-chip, without having to fetch data from the DRAM main
+%% memory.  While an LLC cache hit may take 10x more cycles to complete
+%% than an L1 hit, an LLC miss takes an additional 10x longer to
+%% service.  An LLC miss not only takes longer to complete, but
+%% activating the
+%% DRAM system also uses more energy to service the request.  From an
+%% energy perspective, an LLC hit consumes only the energy to service the
+%% memory request by the LLC.  On the other hand, an LLC miss requires
+%% the energy to
+%% check the LLC, notice that it's a miss, and then fetch the data from
+%% DRAM, possibly also needing to write back dirty data to DRAM which has
+%% been
+%% displaced by the incoming data. 
 
-In an effort to improve the effectiveness of the LLC and reduce the
+In an effort to improve the effectiveness of the caches and reduce the
 number of DRAM accesses, a number of cache management policies have
 been proposed, often based around having a set associative cache, such
 as the Least Recently Used (LRU) policy, Not Recently Used
@@ -47,10 +48,13 @@ each use a different insertion policy when dealing with incoming
 cache blocks.  Both SRRIP and DRRIP are discussed at length in section
 \ref{sec:policies}.
 
-In this paper we explore the effectiveness of the Time to Recache
+In this paper we propose the use of a class of Time to Recache
 (TTR) metric in offering insight into why different cache management
-policies perfor better than others.  This metric refers
-to the time spent by a cache line after it has been evicted from the
-LLC and before it is fetched again.  It is related to, but distinct
-from, the notion of ``reuse distance,'' which refers to the amount of
-time between successive accesses to a given cache block.
+policies perfor better than others.  
+This class of metrics refers to the time spent by a cache line after it has been
+evicted from the cache and before being fetched again.  
+It is related to, but distinct from, the notion of ``reuse distance,''
+which refers to the amount of time between successive accesses to a
+given cache block.
+The TTR-based metrics are discussed in detail in
+Section~\ref{sec:metrics}.
