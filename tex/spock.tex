@@ -10,7 +10,21 @@
 \maketitle
 
 \begin{abstract}
-Abstract thoughts
+The effectiveness of caching policies has been measured by a number of metrics. 
+The ultimate quantitative measure is overall system performance.
+Other metrics such as hit rate, misses per thousand instructions and
+instructions per cycle are also regularly used in the literature to
+compare cache behaviors.
+In this work we propose a novel class of metrics based on the idea
+that the any memory element should ideally be kept out of the cache
+for as long as possible before it needs to be fetched again.
+Among this set of metrics, we analyze Memory Access To Recache as a
+reasonably accessible number to collect through simulation that
+approximates the ideal of Wall-Time To Recache close enough to be
+interesting.
+We also provide our simulation and testing methodology and source to
+hopefully assist others in applying these metrics to their own
+studies.
 \end{abstract}
 
 \input{tex/01-introduction}
