@@ -1,5 +1,5 @@
 # Programs
-TEX := python bin/pylatex
+TEX := python3 bin/pylatex
 
 
 all: docs
@@ -11,7 +11,7 @@ clean:
 
 docs: build/docs/spock.pdf
 
-build/docs/%.pdf : tex/%.tex tex/*.tex
+build/docs/%.pdf : tex/%.tex tex/*.tex bib/main.bib
 	@mkdir -p $(@D)
-	$(TEX) $< $@
+	$(TEX) $< $@ bib/main.bib
 
