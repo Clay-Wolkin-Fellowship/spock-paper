@@ -52,8 +52,9 @@ def compile(input, output, bibtex):
 				cwd = os.getcwd()
 				try:
 					shutil.copytree(bibdir, bibout)
-					os.chdir(bibout)
-					subprocess.Popen(["bibtex", bibfile]).communicate()
+					os.chdir(tmp)
+					paper = os.path.splitext(os.path.split(input)[1])[0]
+					subprocess.Popen(["bibtex", paper]).communicate()
 					bibtex = None
 				finally:
 					os.chdir(cwd)
@@ -70,7 +71,7 @@ if __name__ == "__main__":
 	cwd = os.getcwd()
 	input = os.path.abspath(sys.argv[1])
 	output = os.path.abspath(sys.argv[2])
-	bibtex = sys.argv if len(sys.argv) > 3 else None
+	bibtex = sys.argv[3] if len(sys.argv) > 3 else None
 	try:
 		compile(input, output, bibtex)
 	except IgnorableError:
