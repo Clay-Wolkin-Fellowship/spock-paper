@@ -35,7 +35,7 @@ def readLogfile(filename):
 			last = line
 	return not RERUN or ERRORED
 
-def compile(input, output):
+def compile(input, output, bibtex):
 	tmp = mkdtemp(suffix="tex")
 	try:
 		while True:
@@ -43,8 +43,20 @@ def compile(input, output):
 			proc.communicate()
 			outfile = "%s.pdf" % os.path.splitext(os.path.basename(input))[0]
 			logfile = "%s.log" % os.path.splitext(os.path.basename(input))[0]
-			if readLogfile(os.path.join(tmp, logfile)):
+			if not bibtex and readLogfile(os.path.join(tmp, logfile)):
 				break
+			if bibtex:
+				bibdir, bibfile = os.path.split(bibtex)
+				bibfile, _ = os.path.splitext(bibfile)
+				bibout = os.path.join(tmp, bibdir)
+				cwd = os.getcwd()
+				try:
+					shutil.copytree(bibdir, bibout)
+					os.chdir(bibout)
+					proc = subprocess.Popen(["bibtex", bibfile]
+					bibtex = None
+				finally:
+					os.chdir(cwd)
 		try:
 			shutil.copy2(os.path.join(tmp, outfile), output)
 		except IOError as e:
@@ -54,12 +66,13 @@ def compile(input, output):
 		pass
 
 
-cwd = os.getcwd()
-input = os.path.abspath(sys.argv[1])
-output = os.path.abspath(sys.argv[2])
-
-try:
-	compile(input, output)
-except IgnorableError:
-	pass
+if __name__ == "__main__":
+	cwd = os.getcwd()
+	input = os.path.abspath(sys.argv[1])
+	output = os.path.abspath(sys.argv[2])
+	bibtex = sys.argv if len(sys.argv) > 3 else None
+	try:
+		compile(input, output, bibtex)
+	except IgnorableError:
+		pass
 
