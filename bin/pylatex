@@ -53,7 +53,7 @@ def compile(input, output, bibtex):
 				try:
 					shutil.copytree(bibdir, bibout)
 					os.chdir(bibout)
-					proc = subprocess.Popen(["bibtex", bibfile]
+					subprocess.Popen(["bibtex", bibfile]).communicate()
 					bibtex = None
 				finally:
 					os.chdir(cwd)
