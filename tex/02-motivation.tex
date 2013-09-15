@@ -103,6 +103,12 @@ A low TTR number means that the cache block was evicted and then
 recached very soon afterwards, suggesting that it should not have
 been evicted in the first place.
 
+However not one TTR metric tells the whole story.
+In aggregate, it is hard to tell the difference between recaching after CPU intensive calculations, a small working set, and a large number of evictions.
+By having all three metrics, we can perhaps determine that a low WTTR actually had a relatively high MMTR, indicating that the working set was simply too large for our cache.
+Thus despite a low WTTR, it is probably hard to improve the cache over that range.
+Similarly if MATR or MMTR is very low, but WTTR is very high, then that portion of code is probably CPU bound, and there is no need to improve the caching algorithm over that region.
+
 In FIGURE HERE, we see an example of a TTR graph.  A TTR graph is a
 line-graph representation of a histogram of TTR values.  The majority
 of
