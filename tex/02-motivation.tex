@@ -59,7 +59,7 @@ TODO: Update with WTTR, MATR, MMTR etc.
 
 In this work we propose the Time to Recache (TTR) methodology for
 examining the behavior and effectiveness of the LLC.  TTR is defined
-as the amount of time (measured in cycles or seconds) that a cache
+as the amount of time (measured in a variety of different manners) that a cache
 block spends outside of the cache after it has been evicted and
 before it is accessed again.  Note that this is distinct from the
 concept of reuse distance.  Reuse distance is the time between
@@ -67,6 +67,13 @@ successive accesses to a piece of data or cache block.  TTR doesn't
 take into account the amount of time a cache block spent in the LLC
 before it was evicted.  TTR is only concerned with the time spent
 after eviction and before reuse.
+
+We came up with three possible TTR metrics. Wall Time to Recache (WTTR), measures
+the amount of time the CPU would take (either in cycles, or in seconds) before a cache block is accessed again.
+In this paper we approximate WTTR by assigning a cost to instructions and cache misses.
+The remaining two metrics are Memory Accesses to Recache (MATR) and Memory Misses to Recache (MMTR).
+Both of these count memory instructions in between an eviction and a recache, but MMTR only counts misses.
+We will show that these metrics have different values.
 
 Belady's optimal algorithm~\cite{belady66} for cache eviction always
 evicts
