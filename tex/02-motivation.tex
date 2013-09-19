@@ -55,25 +55,38 @@ of a cache is a popular and important metric to look at.
 
 \subsection{TTR}
 \label{sec:metrics}
-TODO: Update with WTTR, MATR, MMTR etc.
-
 In this work we propose the Time to Recache (TTR) methodology for
 examining the behavior and effectiveness of the LLC.  TTR is defined
-as the amount of time (measured in a variety of different manners) that a cache
-block spends outside of the cache after it has been evicted and
-before it is accessed again.  Note that this is distinct from the
-concept of reuse distance.  Reuse distance is the time between
-successive accesses to a piece of data or cache block.  TTR doesn't
-take into account the amount of time a cache block spent in the LLC
-before it was evicted.  TTR is only concerned with the time spent
-after eviction and before reuse.
+as the amount of time (measured in a variety of different manners)
+that a cache block spends outside of the cache after it has been
+evicted and before it is accessed again.  
+Note that this is distinct from the concept of reuse distance.  
+Reuse distance is the time between successive accesses to a piece of
+data or cache block.  
+TTR does not take into account the amount of time a cache block spent
+in the LLC before it was evicted.  
+TTR is only tracks the time spent after eviction and before reuse.
+In this paper, we propose the use of three variants of the TTR
+metric. 
 
-We came up with three possible TTR metrics. Wall Time to Recache (WTTR), measures
-the amount of time the CPU would take (either in cycles, or in seconds) before a cache block is accessed again.
-In this paper we approximate WTTR by assigning a cost to instructions and cache misses.
-The remaining two metrics are Memory Accesses to Recache (MATR) and Memory Misses to Recache (MMTR).
-Both of these count memory instructions in between an eviction and a recache, but MMTR only counts misses.
-We will show that these metrics have different values.
+\textbf{WTTR:} Wall Time to Recache (WTTR), is defined as the amount
+of real world time the CPU takes (either in cycles, or in seconds for
+a known clock frequency) before a cache block is accessed again.
+Due to limitations in our trace collection and simulation methodology,
+we approximate WTTR by assigning a ``wall time'' cost to instructions
+and cache misses.
+
+\textbf{MATR:} Memory Access to Recache (MATR), is defined as the
+number of memory accesses that occur before the cache block is
+accessed after eviction.
+This is much easier to gather in our simulations but is not as close
+to the real data as WTTR.
+
+\textbf{MMTR:} Memory Misses to Recache (MMTR), is defined as the
+number of cache misses from the time that a given cache block is
+evicted until it is returned to the cache.
+This is also straightforward to gather even in trace-based
+simulations, but is affected by the hit rate of the caches.
 
 Belady's optimal algorithm~\cite{belady66} for cache eviction always
 evicts
