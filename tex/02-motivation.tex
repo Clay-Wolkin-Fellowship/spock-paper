@@ -55,18 +55,38 @@ of a cache is a popular and important metric to look at.
 
 \subsection{TTR}
 \label{sec:metrics}
-TODO: Update with WTTR, MATR, MMTR etc.
-
 In this work we propose the Time to Recache (TTR) methodology for
 examining the behavior and effectiveness of the LLC.  TTR is defined
-as the amount of time (measured in cycles or seconds) that a cache
-block spends outside of the cache after it has been evicted and
-before it is accessed again.  Note that this is distinct from the
-concept of reuse distance.  Reuse distance is the time between
-successive accesses to a piece of data or cache block.  TTR doesn't
-take into account the amount of time a cache block spent in the LLC
-before it was evicted.  TTR is only concerned with the time spent
-after eviction and before reuse.
+as the amount of time (measured in a variety of different manners)
+that a cache block spends outside of the cache after it has been
+evicted and before it is accessed again.  
+Note that this is distinct from the concept of reuse distance.  
+Reuse distance is the time between successive accesses to a piece of
+data or cache block.  
+TTR does not take into account the amount of time a cache block spent
+in the LLC before it was evicted.  
+TTR is only tracks the time spent after eviction and before reuse.
+In this paper, we propose the use of three variants of the TTR
+metric. 
+
+\textbf{WTTR:} Wall Time to Recache (WTTR), is defined as the amount
+of real world time the CPU takes (either in cycles, or in seconds for
+a known clock frequency) before a cache block is accessed again.
+Due to limitations in our trace collection and simulation methodology,
+we approximate WTTR by assigning a ``wall time'' cost to instructions
+and cache misses.
+
+\textbf{MATR:} Memory Access to Recache (MATR), is defined as the
+number of memory accesses that occur before the cache block is
+accessed after eviction.
+This is much easier to gather in our simulations but is not as close
+to the real data as WTTR.
+
+\textbf{MMTR:} Memory Misses to Recache (MMTR), is defined as the
+number of cache misses from the time that a given cache block is
+evicted until it is returned to the cache.
+This is also straightforward to gather even in trace-based
+simulations, but is affected by the hit rate of the caches.
 
 Belady's optimal algorithm~\cite{belady66} for cache eviction always
 evicts
@@ -95,6 +115,12 @@ space to be used by other data.  With TTR, a higher number is better.
 A low TTR number means that the cache block was evicted and then
 recached very soon afterwards, suggesting that it should not have
 been evicted in the first place.
+
+However not one TTR metric tells the whole story.
+In aggregate, it is hard to tell the difference between recaching after CPU intensive calculations, a small working set, and a large number of evictions.
+By having all three metrics, we can perhaps determine that a low WTTR actually had a relatively high MMTR, indicating that the working set was simply too large for our cache.
+Thus despite a low WTTR, it is probably hard to improve the cache over that range.
+Similarly if MATR or MMTR is very low, but WTTR is very high, then that portion of code is probably CPU bound, and there is no need to improve the caching algorithm over that region.
 
 In FIGURE HERE, we see an example of a TTR graph.  A TTR graph is a
 line-graph representation of a histogram of TTR values.  The majority
