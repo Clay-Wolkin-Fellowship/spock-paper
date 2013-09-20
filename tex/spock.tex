@@ -17,15 +17,16 @@ instructions per cycle are also regularly used in the literature to
 compare cache behaviors.
 In this work we propose a novel class of metrics based on the idea
 that any memory element should ideally be kept out of the cache
-for as long as possible before it needs to be fetched again.
+for as long as possible before being fetched again.
 % Do we want to mention Belady's algorithm specfically picks the current item in cache that would be receached last?
-In general we measure the Time to Recache for each evicted element as a qualitative measurement of a caching policies performance.
+In general we measure the Time to Recache for each evicted element as a qualitative measurement of a caching policy's performance.
 Among this set of metrics, we analyze the number of Memory Accesses and Memory Misses to Recache, as well as a rough approximation
 of Wall-Time to Recache.
 We believe that these metrics will not only be useful for comparing the performance of two different caching policies,
-  but allow designers of such policies to indentify memory access patterns that the current policy fares poorly with.
+  but allow designers of such policies to indentify memory access
+  patterns that are problematic for existing policies.
 We also provide our simulation and testing methodology and source to
-hopefully assist others in applying these metrics to their own
+assist others in applying these metrics to their own
 studies.
 \end{abstract}
 
