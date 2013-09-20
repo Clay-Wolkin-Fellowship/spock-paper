@@ -59,7 +59,7 @@ In the case of NRU Random, the cache will evict any one of the items marked "not
 
 \subsubsection{SRRIP}
 
-SRRIP is like an expansion upon NRU.  Where NRU uses only one bit to track the age of items, SRRIP will use M bits.  Whenever there is a cache hit or its age is set to recently used (0).  New items are given an old age, but not the oldest possible age (for example 2^M - 2).  For a cache miss, it searches for the first item with the oldest possible age (2^M - 1).  If no item has that age, then all the items become one unit older, and then it searches again for one with the oldest possible age.
+SRRIP is like an expansion upon NRU.  Where NRU uses only one bit to track the age of items, SRRIP will use M bits.  Whenever there is a cache hit or its age is set to recently used (0).  New items are given an old age, but not the oldest possible age (for example $2^M - 2$).  For a cache miss, it searches for the first item with the oldest possible age ($2^M - 1$).  If no item has that age, then all the items become one unit older, and then it searches again for one with the oldest possible age.
 
 \subsubsection{BRRIP}
 
