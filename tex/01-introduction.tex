@@ -1,59 +1,22 @@
-
 \section{Introduction}
+Caching is used in processor design to keep data close to the computational units.
+This reduces memory access latency, which in turn reduces the cycles per instruction (CPI) of a program.
+In an effort to improve the effectiveness of caches, a variety of cache policies have been proposed.
+Belady proposed an optimal cache algorithm that involves always evicting the cache block that will be used furthest in the future.
+Unfortunately this requires knowing ahead of time what memory the program will access.
+Online algorithms have been developed to approximate Belady's algorithms,
+	these include Least Recently Used (LRU), Not Recently Used (NRU),
+	and more recently Re-reference Interval Predicition (RRIP)~\cite{jaleeltheobald10},
+	in both Static RRIP (SRIPP) and Dynamic RRIP (DRIPP).
+LRU and NRU were proposed on the basis that if a processor just used a cache block,
+	it is likely to be used sooner than a cache block it has not used in a while.
+The RRIP policies attempt to propose the future usefulness of cache blocks,
+	and evicting cache blocks that are not likely to be used in the future.
+These policies are discussed at length in section \ref{sec:policies}
 
-%%%
-%% Caching is used in processor design to keep data close to the computational units,
-%% which improves memory access latency, and reduces off-chip memory bandwidth.
-%% Multi-level caches store data in progressively larger, and further away structures.
-%% The increased distance, and especially the increased size,
-%% of higher levels of cache mean that the higher levels of cache have longer latencies to access.
-%% If all of the on-processor caches fail to contain the data being accessed by the processor right now,
-%% then a long latency and high energy access to main memory is used to fetch the data into the caches so it will be
-%% available for the next time that data is accessed.
-
-%%% LLC isn't relevant to this paper (jbs)
-%% The Last Level Cache (LLC) is especially important for performance
-%% because it represents the last opportunity for a memory access to
-%% remain on-chip, without having to fetch data from the DRAM main
-%% memory.  While an LLC cache hit may take 10x more cycles to complete
-%% than an L1 hit, an LLC miss takes an additional 10x longer to
-%% service.  An LLC miss not only takes longer to complete, but
-%% activating the
-%% DRAM system also uses more energy to service the request.  From an
-%% energy perspective, an LLC hit consumes only the energy to service the
-%% memory request by the LLC.  On the other hand, an LLC miss requires
-%% the energy to
-%% check the LLC, notice that it's a miss, and then fetch the data from
-%% DRAM, possibly also needing to write back dirty data to DRAM which has
-%% been
-%% displaced by the incoming data. 
-
-In an effort to improve the effectiveness of the caches and reduce the number of DRAM accesses,
- a number of cache management policies have been proposed,
- often based around having a set associative cache,
- such as the Least Recently Used (LRU) policy, Not Recently Used
-% could use citation
-(NRU) policy, and others.  Each of these cache management policies
-attempts to evict data that is no longer deemed useful in favor of newly accessed
-data which was not found in the LLC before.  Recently the
-Re-reference Interval Prediction (RRIP)~\cite{jaleeltheobald10} cache
-management policy has
-been proposed as a way to improve LLC performance by attempting to
-predict the future usefulness of cache blocks.  RRIP is represented by
-two distinct varieties, namely Static RRIP (SRRIP) and Dynamic RRIP
-(DRRIP), which
-each use a different insertion policy when dealing with incoming
-cache blocks.  Both SRRIP and DRRIP are discussed at length in section
-\ref{sec:policies}.
-
-In this paper we propose the use of a class of Time to Recache
-(TTR) metric in offering insight into why different cache management
-policies perfor better than others.  
-This class of metrics refers to the time spent by a cache line after it has been
-evicted from the cache and before being fetched again.  
-It is related to, but distinct from, the notion of ``reuse distance,''
-which refers to the amount of time between successive accesses to a
-given cache block.
-The TTR-based metrics are discussed in detail in
-Section~\ref{sec:metrics}.
+In this paper we propose the use of a class of Time to Recache (TTR) metric in offering insight into why different cache management policies perform better than others.  
+There are a variety of different ways to measure TTR, including Memory Accesses to Recache (MATR), Memory Misses to Reacache (MMTR), Wall-time to Recache (WTTR). 
+This class of metrics refers to the time spent by a cache line after it has been evicted from the cache and before being fetched again.  
+It is related to, but distinct from, the notion of ``reuse distance,'' which refers to the amount of time between successive accesses to a given cache block.
+The TTR-based metrics are discussed in detail in Section~\ref{sec:metrics}.
 
