@@ -1,16 +1,15 @@
+
 \section{Introduction}
 
-Caching is used in processor design to keep data close to the
-computational units, which improves memory access latency, and reduces
-off-chip memory bandwidth.  Multi-level
-caches store data in progressively larger,
-and further away structures.  The increased distance, and especially
-the increased size, of higher levels of cache mean that the higher
-levels of cache have longer latencies to access.  If all of the
-on-processor caches fail to contain the data being accessed by the
-processor right now, then a long latency and high energy access to
-main memory is used to fetch the data into the caches so it will be
-available for the next time that data is accessed.
+%%%
+%% Caching is used in processor design to keep data close to the computational units,
+%% which improves memory access latency, and reduces off-chip memory bandwidth.
+%% Multi-level caches store data in progressively larger, and further away structures.
+%% The increased distance, and especially the increased size,
+%% of higher levels of cache mean that the higher levels of cache have longer latencies to access.
+%% If all of the on-processor caches fail to contain the data being accessed by the processor right now,
+%% then a long latency and high energy access to main memory is used to fetch the data into the caches so it will be
+%% available for the next time that data is accessed.
 
 %%% LLC isn't relevant to this paper (jbs)
 %% The Last Level Cache (LLC) is especially important for performance
@@ -29,14 +28,13 @@ available for the next time that data is accessed.
 %% been
 %% displaced by the incoming data. 
 
-In an effort to improve the effectiveness of the caches and reduce the
-number of DRAM accesses, a number of cache management policies have
-been proposed, often based around having a set associative cache, such
-as the Least Recently Used (LRU) policy, Not Recently Used
+In an effort to improve the effectiveness of the caches and reduce the number of DRAM accesses,
+ a number of cache management policies have been proposed,
+ often based around having a set associative cache,
+ such as the Least Recently Used (LRU) policy, Not Recently Used
 % could use citation
 (NRU) policy, and others.  Each of these cache management policies
-attempts to
-evict data that is no longer deemed useful in favor of newly accessed
+attempts to evict data that is no longer deemed useful in favor of newly accessed
 data which was not found in the LLC before.  Recently the
 Re-reference Interval Prediction (RRIP)~\cite{jaleeltheobald10} cache
 management policy has
@@ -58,3 +56,4 @@ which refers to the amount of time between successive accesses to a
 given cache block.
 The TTR-based metrics are discussed in detail in
 Section~\ref{sec:metrics}.
+
