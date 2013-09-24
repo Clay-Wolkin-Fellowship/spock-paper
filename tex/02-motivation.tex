@@ -22,14 +22,14 @@ Finding data as close to the processor as possible is critical for high performa
 
 \subsection{MPKI}
 
-One of the LLC's main jobs is to redue the number of DRAM accesses that are performed.
-Each DRAM read access includes occupying a memory controller's read buffer, waiting for this access's turn,
- and then sending that read request across long wires to distant DRAM chips,
- activating those DRAM chips, and then finally sending the data back to the memory controller over several more cycles.
-This description of events omits what happens to the data after it gets back to the memory controller,
- and also ignores the consequences of needing to write dirty data from the LLC back to the cache.
-There is a lot of work that has to be done in the event of an LLC miss,
+One of the cache's main jobs is to redue the number of memory accesses that are performed on the next level of cache.
+Each cache miss includes accessing the next level cache, and possibly writing back if that cache block is dirty.
+If the next level cache is shared, then there may be contention between the different processors.
+There is a lot of work that has to be done in the event of a cache miss,
  so reducing the MPKI of a cache is a popular and important metric to look at.
+
+While both of these metrics are good for comparing how one caching policy does against another,
+	neither provides insight on what sort of memory accesses the cache needs to improve on.
 
 %\subsection{More of the Story}
 % This needs work
