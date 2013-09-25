@@ -27,44 +27,57 @@ We sampled the file to minimize the data set we operated on, while maintaining t
 \subsection{Caching Policies}
 \label{sec:policies}
 
-We use a number of different cache replacement policies.  When new data must be added to the cache, either there will already be room in the cache for the data, or something must be evicted from the cache to make room.  The memory index is determined from the memory address of the data.  Each memory index in the cache has one set, and each set has a number of ways, each of which can hold on item of data.  When an item of data must be added to the cache in a set that is full, the replacement policy will determine which determine which data in that set to remove from the cache to make room for the new data.
+Accessing a cache line for the first time causes it to be added to the cache.  We use some of the cache line address bits to decide which set the cache line maps to.  Each set is a *INSERT ASSOCIATIVITY*-way associative set, and when all of the ways in a set are filled, and we want to insert another cache line into the set, then one of the old cache lines must be selected for eviction to make way for new data. We test several different cache replacement policies which determine the cache line to be evicted in the event of an associativity conflict.  The new cache line is always placed in the same cache way that was vacated by the evicted data.
 
 \subsubsection{Belady}
-Andrew should write this section.
+
+Belady's algorithm was proposed in the context of page replacement, but its principle also applies in cache replacement.  The algorithm is to choose the cache line to be evicted whose next access is furthest in the future.  This is the optimal cache replacement strategy, but it requires oracle knowledge of the total order of all memory accesses in the program, which is not generally knowable at the time of cache replacement.  We show TTR results for Belady's algorithm anyway as an optimal baseline to compare the other cache replacement algorithms against.
 
 \subsubsection{Random}
 
-While Belady's algorithm is the best possible replacement policy, random is perhaps the simplest.  When a set is full, the random replacement policy will delect which way to evict from the cache completely randomly and then place the new data there.
+While Belady's algorithm requires perfect knowledge of all memory accesses in a program, the Random cache replacement algorithm requires no knowledge whatsoever about the order of memory accesses in the program.  When each cache replacement decision is to be made, a random number is generated that decides which way of the set to evict.
+
+All of the other evaluated cache replacement policies will behave differently because of, and respond to, program behavior in one way or another, but the Random algorithm is not affected in any way by program behavior.  This algorithm requires the storage of no additional state per cache line to implement.
 
 \subsubsection{FIFO}
 
-FIFO, or "first in, first out," is a replacement policy that ignores usage and simply removes the "oldest" data in the set when something must be evicted.  Here, oldest means the data that was added to the cache least recently.
+"First In First Out," or FIFO, chooses the cache line to evict from the set that has been in the cache longest.  Neither reuse, nor any other factors, has any bearing in deciding which cache line to evict in the FIFO algorithm.  This algorithm requires only enough per-set state to point to the cache line in that set that will be evicted and replaced next.
 
 \subsubsection{LRU}
 
-LRU, or "least recently used," is similar to FIFO, but the age of the items is reset when data is used.  This means that even if an item was added least recently, if it was used most recently, then it is treated as the "newest" item in the set.  In this replacement policy, the least recently used item will be removed from the cache, rather than the item originally added the longest time ago.
+"Least Recently Used," or LRU, choose to evict the cache line from the set whose most recent access was furthest in the past.  Conceptually this works like a queue, where eviction candidates are always chosen from the tail of the queue, and both initial use and subsequent reuse promotes cache lines to the front of the queue, furthest away from being in danger of eviction. In the absence of cache line reuse, this algorithm behaves identically to FIFO.  This algorithm requires enough state per cache line to enforce an absolute order between all members of a set, typically log2(N) bits per cache line, where N is the associativity of the set.
 
 \subsubsection{MRU}
 
-MRU, or "most recently used," is very similar to LRU, but is the opposite.  Instead of removing the item that was used least recently, this replacement algorithm removes the item that was used most recently.  This means that whatever item was last accessed in the cache will be removed first in the event that something must be evicted.
+"Most Recently Used," or MRU, behaves in the opposite way of LRU.  The same state and ordering is being maintained in both algorithms, but in MRU the head of the queue, the most recently used cache line, is chosen for eviction, rather than the tail of the queue.  This algorithm has the same storage overheads as LRU.
 
-\subsubsection{NRU FIFO}
+\subsubsection{NRU}
 
-NRU, or "not recently used," is slightly more complex.  The NRU replacement algorithm keeps track of whether or not each item in a set has been "recently used."  Every item added to the cache starts off with a value of "not recently used."  Any time an item in the cache is accessed, the value is switched to "recently used."  If all the items in a set are marked as "recently used," then they are all reset to "not recently used."  Any time an eviction must occur, only one of the items marked "not recently used" is evicted.  In the case of NRU FIFO, it uses a FIFO type decision to determine which item to evict.
+"Not Recently Used," or NRU, is a simplification of the mechanism and storage overheads in LRU, and is similar in operation to the clock algorithm in page replacement.  There is 1 bit of state maintained per cache line in a set.  A value of 0 means that the cache line has been "recently used," and is therefore not a candidate for eviction.  A value of "1" means that the cache line has "not been recently used," and may be evicted.  Re-referencing a cache line causes its NRU state to be set to 0.
+
+The eviction victim is found by linearly scanning through the NRU state bits in a set (in a left-to-right fashion) and evicting the cache line corresponding to the first 1 encountered.  If no 1s are encountered, then all NRU bits are changed to 1 and the same victim selection process is repeated, i.e., the cache line in way 0 will be evicted.
 
 \subsubsection{NRU Random}
 
-In the case of NRU Random, the cache will evict any one of the items marked "not recently used" at random.
+NRU Random is similar to NRU, but rather than a linear scan through all of the NRU bits to evict the first encountered 1, a random cache line is chosen whose NRU bit is set to 1.  Again, if there are no cache lines have an NRU bit value of 1, then all cache lines NRU bits are changed to 1.
 
 \subsubsection{SRRIP}
 
-SRRIP is like an expansion upon NRU.  Where NRU uses only one bit to track the age of items, SRRIP will use M bits.  Whenever there is a cache hit or its age is set to recently used (0).  New items are given an old age, but not the oldest possible age (for example $2^M - 2$).  For a cache miss, it searches for the first item with the oldest possible age ($2^M - 1$).  If no item has that age, then all the items become one unit older, and then it searches again for one with the oldest possible age.
+Static Re-Reference Interval Prediction, or SRRIP, is similar to NRU, but it uses multiple bits to encode how recently a cache line has been used, and therefore how soon it is predicted to be used again.  For this study, we use 2 bits to encode the Re-Reference Prediction Values (RRPVs) for all RRIP-derived cache replacement algorithms, meaning that RRPVs are in the range of 0 to 3.  An RRPV of 0 means that the cache line was recently used, and is in little danger of eviction, and an RRPV of 3 means that the cache line was not recently used, and is in danger of imminent eviction.
+
+SRRIP works by assigning an RRPV of 2 to each cache line when it is initially brought into the cache.  Reuse of a cache line promotes its RRPV to 0.  Eviction victim selection is done by scanning through the set, left-to-right, and looking for a cache line whose RRPV is 3.  The first encountered 3 is evicted.  If no 3s are found, then all RRPVs in the set are incremented, and the scan to look for a 3 repeats.  This process may repeat several times until a 3 is found and evicted.
 
 \subsubsection{BRRIP}
 
-BRRIP is very similar to SRRIP, but in order to avoid cache thrashing, inserts new items with varying age.  Usually, new items will be given the oldest possible age, though with some low probability, new items will be given slightly younger ages.  The rest of the functionality is effectively the same.
+"Bimodal RRIP," or BRRIP is similar to SRRIP, and varies only in the initial RRPV of cache lines when they are first brought into the cache.  Whereas SRRIP always assigns an RRPV of 2 to incoming cache lines, BRRIP assigns an RRPV of 3 95\% of the time, and an RRPV of 2 only 5\% of the time.  This offers resistance to scans through memory that may otherwise thrash the cache.  In the absence of cache line reuse, BRRIP results in only a single way of each set being thrashed, rather than every way, as can happen in LRU, NRU, or SRRIP.
+
+The mechanisms of scanning through the set to find an RRPV of 3, and incrementing all RRPVs if a 3 is not found, are identical to SRRIP.
 
 \subsubsection{DRRIP}
 
-DRRIP dynamically chooses between SRRIP and BRRIP depending on which one is better at any given time.  Some sets in the cache are permanently set to run on SRRIP and some others are permanently set to run on BRRIP.  DRRIP then keeps track of which policy is doing a better job in general and switches between SRRIP and BRRIP for the rest of the cache accordingly.
+"Dynamic RRIP," or DRRIP, chooses to use either SRRIP or BRRIP at run-time, depending on which cache replacement policy is currently more effective at minimizing cache misses.  This is done by permanently assigning a small number of sets in the cache to always follow the SRRIP policy, and permanently assigning a small number of other sets to always follow the BRRIP policy.  Each cache miss in a SRRIP-only set will increment a policy selection counter, and each cache miss in a BRRIP-only set will decrement the policy selection counter.
+
+Depending on the value of the policy selection counter, either SRRIP or BRRIP will be considered to currently be causing more cache misses than the other.  The remaining cache sets that are not permenantly assigned to follow a specific cache replacement policy will then use the cache replacement policy of whichever candidate policy is currently causing the fewest cache misses.
+
+The mechanisms of scanning through the set to find an RRPV of 3, and incrementing all RRPVs if a 3 is not found, are identical to SRRIP and BRRIP for all sets, regardless of which replacement policy they are using.
 
