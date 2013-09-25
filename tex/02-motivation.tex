@@ -1,120 +1,76 @@
 \section{System Performance Metrics}
 
-Computer performance is dependent on a variety of factors, ranging
-from very low level features like the latency of individual functional
-units, bypass networks,
-and out-of-order hardware, up through very high level features such as
-operating systems, disk I/O, and network latency.  In this paper we
-are focusing our attention on the performance of the LLC.  The quality
-of an LLC is typically gauged by two factors, the improvement in
-performance, measured in Instructions Per Clock (IPC),
-that it affords to the processor it backs, and the reduction of Misses
-Per
-1000 Instructions (MPKI), which equates to a reduction in the
-number of long latency DRAM main memory accesses.
+Computer performance is dependent on a variety of factors,
+ ranging from very low level features like the latency of individual functional units,
+ bypass networks, and out-of-order hardware, up through very high level features such as operating systems,
+ disk I/O, and network latency. 
+In this paper we are focusing our attention on the performance of the cache.
+The quality of a cache is typically gauged by two factors,
+ the improvement in performance, measured in Instructions Per Clock (IPC),
+ that it affords to the processor it backs, and the reduction of Misses Per 1000 Instructions (MPKI),
+ which equates to a reduction in the number of longer latency memory accesses from upper level caches.
 
 \subsection{IPC}
 
-The number of instructions a CPU can complete in a single clock cycle
-can be equated with its absolute performance.  If a processor can
-complete more instructions in a given clock cycle than another,
-its performance is better.  Hardware caches play a critical role in
-boosting this number.  The closer that data sits to the functional
-units, the higher performance can be.  In a typical three level cache
-hierarchy, it can take 10x longer to access the third level of
-cache than the first, and another 10x longer to access main memory.
-Finding data as close to the processor as possible is critical for
-high performance.
+The number of instructions a CPU can complete in a single clock cycle can be equated with its absolute performance.
+If a processor can complete more instructions in a given clock cycle than another, its performance is better.
+Hardware caches play a critical role in boosting this number.
+The closer that data sits to the functional units, the higher performance can be.
+In a typical three level cache hierarchy, it can take 10x longer to access the third level of cache than the first,
+ and another 10x longer to access main memory.
+Finding data as close to the processor as possible is critical for high performance.
 
 \subsection{MPKI}
 
-One of the LLC's main jobs is to redue the number of DRAM accesses
-that are
-performed.  Each DRAM read access includes occupying a memory
-controller's read buffer, waiting for this access's turn, and then
-sending that read request across long wires to distant DRAM chips,
-activating those DRAM chips, and then finally sending the data back to
-the memory controller over several more cycles.  This description of
-events omits what happens to the data after it gets back to the memory
-controller, and also ignores the consequences of needing to write
-dirty data from the LLC back to the cache.  There is a lot of work
-that has to be done in the event of an LLC miss, so reducing the MPKI
-of a cache is a popular and important metric to look at.
+One of the cache's main jobs is to redue the number of memory accesses that are performed on the next level of cache.
+Each cache miss includes accessing the next level cache, and possibly writing back if that cache block is dirty.
+If the next level cache is shared, then there may be contention between the different processors.
+There is a lot of work that has to be done in the event of a cache miss,
+ so reducing the MPKI of a cache is a popular and important metric to look at.
 
-%\subsection{More of the Story}
-% This needs work
-%
-%Measuring IPC and MPKI can tell you about how well your LLC is
-%performing, but they don't tell you about what's going on inside the
-%LLC to provide the performance.  Looking at IPC alone does not tell
-%you anything about where to attribute the increase in performance.
-%Similarly, looking at MPKI alone does not tell you about the
-%underlying memory access patterns that caused that MPKI.  In this
-%paper, we look at the Time to Recache (TTR) metric in order to get a
-%more complete view of the behavior of an LLC.
+While both of these metrics are good for comparing how one caching policy does against another,
+	neither provides insight on what sort of memory accesses the cache needs to improve on.
 
 \subsection{TTR}
 \label{sec:metrics}
-In this work we propose the Time to Recache (TTR) methodology for
-examining the behavior and effectiveness of the LLC.  TTR is defined
-as the amount of time (measured in a variety of different manners)
-that a cache block spends outside of the cache after it has been
-evicted and before it is accessed again.  
-Note that this is distinct from the concept of reuse distance.  
-Reuse distance is the time between successive accesses to a piece of
-data or cache block.  
-TTR does not take into account the amount of time a cache block spent
-in the LLC before it was evicted.  
+In this work we propose the Time to Recache (TTR) methodology for examining the behavior and effectiveness of the caching policy.
+TTR is defined as the amount of time (measured in a variety of different manners) that a cache block spends outside of the cache after it has been evicted and before it is accessed again.
+Note that this is distinct from the concept of reuse distance. 
+Reuse distance is the time between successive accesses to a piece of data or cache block. 
+TTR does not take into account the amount of time a cache block spent in the LLC before it was evicted.  
 TTR is only tracks the time spent after eviction and before reuse.
-In this paper, we propose the use of three variants of the TTR
-metric. 
+In this paper, we propose the use of three variants of the TTR metric. 
 
-\textbf{WTTR:} Wall Time to Recache (WTTR), is defined as the amount
-of real world time the CPU takes (either in cycles, or in seconds for
-a known clock frequency) before a cache block is accessed again.
-Due to limitations in our trace collection and simulation methodology,
-we approximate WTTR by assigning a ``wall time'' cost to instructions
-and cache misses.
+\textbf{WTTR:}
+Wall Time to Recache (WTTR), is defined as the amount of real world time the CPU takes (either in cycles, or in seconds for a known clock frequency) before a cache block is accessed again.
+Due to limitations in our trace collection and simulation methodology, we approximate WTTR by assigning a ``wall time'' cost to instructions and cache misses.
 
-\textbf{MATR:} Memory Access to Recache (MATR), is defined as the
-number of memory accesses that occur before the cache block is
-accessed after eviction.
-This is much easier to gather in our simulations but is not as close
-to the real data as WTTR.
+\textbf{MATR:}
+Memory Access to Recache (MATR), is defined as the number of memory accesses that occur before the cache block is accessed after eviction.
+This is much easier to gather in our simulations but is not as close to the real data as WTTR.
 
-\textbf{MMTR:} Memory Misses to Recache (MMTR), is defined as the
-number of cache misses from the time that a given cache block is
-evicted until it is returned to the cache.
-This is also straightforward to gather even in trace-based
-simulations, but is affected by the hit rate of the caches.
+\textbf{MMTR:}
+Memory Misses to Recache (MMTR), is defined as the number of cache misses from the time that a given cache block is evicted until it is returned to the cache.
+This is also straightforward to gather even in trace-based simulations, but is affected by the hit rate of the caches.
 
-Belady's optimal algorithm~\cite{belady66} for cache eviction always
-evicts
-the cache block whose reuse is furthest in the future, allowing that
-free space to be used as long as possible by other data before being
-recached.  It is impossible to know at runtime for general workloads
-which cache block has the furthest reuse distance, hence why there are
-so many different caching policies that use various heuristics in an
-effort to approach the effectiveness of this optimal algorithm.
+Belady's optimal algorithm~\cite{belady66} for cache eviction always evicts the cache block whose reuse is furthest in the future,
+ allowing that free space to be used as long as possible by other data before being recached.
+It is impossible to know at runtime for general workloads which cache block has the furthest reuse distance,
+ hence why there are so many different caching policies that use various heuristics in an effort to approach the effectiveness of this optimal algorithm.
 
-Measuring the IPC and MPKI of a workload using one caching policy, and
-comparing that to the IPC and MPKI of running that workload with a
-different caching policy can give you some sense of how close each of
-those caching policy comes to the optimal solution.  This is,
-however, and indirect approach to quantifying how well a caching
-policy is performing.  Tracking the TTR is a direct means of
-comparing two caching policies.
+Measuring the IPC and MPKI of a workload using one caching policy,
+ and comparing that to the IPC and MPKI of running that workload with a different caching policy can give you some sense of how close each of those caching policy comes to the optimal solution.
+This is, however, and indirect approach to quantifying how well a caching policy is performing.
+Tracking the TTR is a direct means of comparing two caching policies.
 
-TTR is an effective metric because it asks the question every time a
-cache block is brought into the cache, ``have I seen this block
-before, and if so, how long ago was it?''  If caching policy A answers
-this question with ``4000 cycles ago,'' and caching policy B answers
-this question with ``6000 cycles ago,'' then caching policy B has done
-a better job at evicting that cache block early and allowing that
-space to be used by other data.  With TTR, a higher number is better.
-A low TTR number means that the cache block was evicted and then
-recached very soon afterwards, suggesting that it should not have
-been evicted in the first place.
+TTR is an effective metric because it asks the question every time a cache block is brought into the cache,
+ ``have I seen this block before, and if so, how long ago was it?''
+If caching policy A answers this question with ``4000 cycles ago,''
+ and caching policy B answers this question with ``6000 cycles ago,''
+ then caching policy B has done a better job at evicting that cache block early and allowing that space to be used by other data.
+With TTR, a higher number is better.
+A low TTR number means that the cache block was evicted and then recached very soon afterwards,
+ suggesting that it should not have been evicted in the first place.
 
 However not one TTR metric tells the whole story.
 In aggregate, it is hard to tell the difference between recaching after CPU intensive calculations, a small working set, and a large number of evictions.
@@ -122,33 +78,3 @@ By having all three metrics, we can perhaps determine that a low WTTR actually h
 Thus despite a low WTTR, it is probably hard to improve the cache over that range.
 Similarly if MATR or MMTR is very low, but WTTR is very high, then that portion of code is probably CPU bound, and there is no need to improve the caching algorithm over that region.
 
-In FIGURE HERE, we see an example of a TTR graph.  A TTR graph is a
-line-graph representation of a histogram of TTR values.  The majority
-of
-the results in this paper are presented in this format.  The bins of a
-TTR graph, along the X-axis,  are 10,000 cycle-long periods of time
-that a cache block has
-been absent from the cache before returning.  The Y-axis of the graph
-is the number of cache blocks that were absent from the cache for that
-long before returning.  For example, if 10 cache blocks had been
-recached after being absent from the cache for 40,000 cycles each,
-then the 4th bin of the graph would have the value of 10.
-
-A TTR graph shows the distribution of how long cache blocks were
-absent.  The intuition of how to read a TTR graph is as follows.  A
-high Y value is generally bad, because it means there were many
-evictions
-and recaches.  Similarly, recaches that happen at a low TTR bin number
-(low X value in the graph) are considered bad because it means that
-when a cache block was evicted it was soon recached, suggesting that
-cache block should not have been evicted in the first place.  Many TTR
-graphs include humps in their distribution.  Humps that appear at low
-TTR values are generally worse than humps that appear at high TTR
-values, although the magnitude of the hump must also be considered.
-High magnitude humps are generally worse than low magnitude humps,
-although the position of these humps must also be considered.
-
-The particular TTR graph in FIGURE HERE is comprised of four TTR
-graphs positioned one above another, each of them representing one of
-four different runs of the same benchmark, but using different caching
-policies.  TODO FINISH THIS
