@@ -1,49 +1,41 @@
 \section{Analysis}
 
 We chose sp\_omp because it showed an interesting distribution of Memory Accesses to Recache (MATR).
-	We have plotted several cache replacemant algorithms against Belady's Optimal Algorithm.
-	As you can see all cache algorithms have a lot of replacements under 100 K memory accesses from eviction.
-	However, there are 3 peaks 250 K, 300 K, and 350 K memory accesses, with similar peaks in the other replacement algorithms.
-	As expected MRU quickly recaches most of the evicted data.
-	More interesting is that SRRIP, LRU, and FIFO, have shifted the peak slightly earlier, meaning that they cache the results slightly longer than possible.
-	Meanwhile, RAND and NRU\_RAND spread out the peak more, which is expected given the inherent randomness in each of the algorthims.
-	DRRIP and BRRIP managed to determine roughly half the time that some of the lines are not going to be used for a long time and release them.
-	This shows the ability have DRRIP and BRRIP to determine quickly which memory locations are not going to be used in a long time,
-		this is advantageous because it frees up cache lines for data which would be used sooner.
+We have plotted several cache replacemant algorithms against Belady's Optimal Algorithm.
+As you can see all cache algorithms have a lot of replacements under 100 K memory accesses from eviction.
+However, there are 3 peaks 250 K, 300 K, and 350 K memory accesses, with similar peaks in the other replacement algorithms.
+As expected MRU quickly recaches most of the evicted data.
+More interesting is that SRRIP, LRU, and FIFO, have shifted the peak slightly earlier, meaning that they cache the results slightly longer than possible.
+Meanwhile, RAND and NRU\_RAND spread out the peak more, which is expected given the inherent randomness in each of the algorthims.
+DRRIP and BRRIP managed to determine roughly half the time that some of the lines are not going to be used for a long time and release them.
+This shows the ability have DRRIP and BRRIP to determine quickly which memory locations are not going to be used in a long time,
+ this is advantageous because it frees up cache lines for data which would be used sooner.
 
 This visualization allows cache designers to understand more clearly if the algorithm is having its intended effect.
-	For instance as previously mentioned DRRIP and BRRIP both appear to split the difference between SRRIP and Belady.
-	This means that BRRIP's improvements are working in these cases, and BRRIP is more often able to determine when something will not be used for a long time.
-	However DRRIP looks very similar to BRRIP, although you would expect it to be able to move the rest of the peak over.
-	This is not the case, and clearly there is room to improve to be the same as belady.
+For instance as previously mentioned DRRIP and BRRIP both appear to split the difference between SRRIP and Belady.
+This means that BRRIP's improvements are working in these cases, and BRRIP is more often able to determine when something will not be used for a long time.
+However DRRIP looks very similar to BRRIP, although you would expect it to be able to move the rest of the peak over.
+This is not the case, and clearly there is room to improve to be the same as belady.
 
-In FIGURE HERE, we see an example of a TTR graph.  A TTR graph is a
-line-graph representation of a histogram of TTR values.  The majority
-of
-the results in this paper are presented in this format.  The bins of a
-TTR graph, along the X-axis,  are 10,000 cycle-long periods of time
-that a cache block has
-been absent from the cache before returning.  The Y-axis of the graph
-is the number of cache blocks that were absent from the cache for that
-long before returning.  For example, if 10 cache blocks had been
-recached after being absent from the cache for 40,000 cycles each,
-then the 4th bin of the graph would have the value of 10.
+In Figure~\ref{matr:buc:all}, we see an example of a TT graph.
+Each of these graphs is a histrogram of TTR values.
+The bins of a TTR graph, along the X-axis are periods of time that a cache block has been absent before returning.
+The Y-axis of the graph is the number of cache blocks that were absent from the cache for that long before returning.
+The intuition of how to read a TTR graph is as follows.
+A high Y value is generally bad, because it means there were many evictions and recaches,
+ however if Belady also has a high Y value, than this is a property of the program, and your caching policy cannot do better,
+ (the program however could possibly be rewritten).
+Many TTR graphs include humps in their distribution, humps that appear significantly later than any equivalent hump in Belady are bad,
+ this means that you are holding onto data for too long.
+Humps that do no appear at all in Belady, means that it would be optimal to hold the data long enough for the second recache to occur,
+ in this case your caching policy does not hold onto data long enough.
 
-A TTR graph shows the distribution of how long cache blocks were
-absent.  The intuition of how to read a TTR graph is as follows.  A
-high Y value is generally bad, because it means there were many
-evictions
-and recaches.  Similarly, recaches that happen at a low TTR bin number
-(low X value in the graph) are considered bad because it means that
-when a cache block was evicted it was soon recached, suggesting that
-cache block should not have been evicted in the first place.  Many TTR
-graphs include humps in their distribution.  Humps that appear at low
-TTR values are generally worse than humps that appear at high TTR
-values, although the magnitude of the hump must also be considered.
-High magnitude humps are generally worse than low magnitude humps,
-although the position of these humps must also be considered.
+For instance consider again Figure~\ref{matr:buc:all}, in this case we see 3 humps starting at about 250K memory accesses for each algorithm.
+We can conclude that SRRIP is always holding onto too long since it's hump is about the same size as Belady's but earlier.
+However, BRRIP and DRRIP, are able to correctly evict the cache block as early as belady half the time,
+ and the other half the time they evict around the same time as SRRIP, resulting in two humps for each hump of belady.
+As we would expect, random eviction spreads out the evictions, resulting in one very wide hump going between SRRIP and belady.
 
-The particular TTR graph in FIGURE HERE is comprised of four TTR
-graphs positioned one above another, each of them representing one of
-four different runs of the same benchmark, but using different caching
-policies.  TODO FINISH THIS
+We can conclude from this graph that BRRIP and DRRIP are correctling predicting rereference intervals for some of the data, approximately half the time.
+However, it is also clear that we can do better, as some cache blocks are incorrectly predicted under BRRIP and DRRIP.
+Furthermore SRRIP is not correctly predicting the rereference interval at all for the memory accesses resulting in these humps.
