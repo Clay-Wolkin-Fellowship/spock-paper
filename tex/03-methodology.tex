@@ -41,19 +41,19 @@ All of the other evaluated cache replacement policies will behave differently be
 
 \subsubsection{FIFO}
 
-"First In First Out," or FIFO, chooses the cache line to evict from the set that has been in the cache longest.  Neither reuse, nor any other factors, has any bearing in deciding which cache line to evict in the FIFO algorithm.  This algorithm requires only enough per-set state to point to the cache line in that set that will be evicted and replaced next.
+First In First Out, or FIFO, chooses the cache line to evict from the set that has been in the cache longest.  Neither reuse, nor any other factors, has any bearing in deciding which cache line to evict in the FIFO algorithm.  This algorithm requires only enough per-set state to point to the cache line in that set that will be evicted and replaced next.
 
 \subsubsection{LRU}
 
-"Least Recently Used," or LRU, choose to evict the cache line from the set whose most recent access was furthest in the past.  Conceptually this works like a queue, where eviction candidates are always chosen from the tail of the queue, and both initial use and subsequent reuse promotes cache lines to the front of the queue, furthest away from being in danger of eviction. In the absence of cache line reuse, this algorithm behaves identically to FIFO.  This algorithm requires enough state per cache line to enforce an absolute order between all members of a set, typically log2(N) bits per cache line, where N is the associativity of the set.
+Least Recently Used, or LRU, choose to evict the cache line from the set whose most recent access was furthest in the past.  Conceptually this works like a queue, where eviction candidates are always chosen from the tail of the queue, and both initial use and subsequent reuse promotes cache lines to the front of the queue, furthest away from being in danger of eviction. In the absence of cache line reuse, this algorithm behaves identically to FIFO.  This algorithm requires enough state per cache line to enforce an absolute order between all members of a set, typically log2(N) bits per cache line, where N is the associativity of the set.
 
 \subsubsection{MRU}
 
-"Most Recently Used," or MRU, behaves in the opposite way of LRU.  The same state and ordering is being maintained in both algorithms, but in MRU the head of the queue, the most recently used cache line, is chosen for eviction, rather than the tail of the queue.  This algorithm has the same storage overheads as LRU.
+Most Recently Used, or MRU, behaves in the opposite way of LRU.  The same state and ordering is being maintained in both algorithms, but in MRU the head of the queue, the most recently used cache line, is chosen for eviction, rather than the tail of the queue.  This algorithm has the same storage overheads as LRU.
 
 \subsubsection{NRU}
 
-"Not Recently Used," or NRU, is a simplification of the mechanism and storage overheads in LRU, and is similar in operation to the clock algorithm in page replacement.  There is 1 bit of state maintained per cache line in a set.  A value of 0 means that the cache line has been "recently used," and is therefore not a candidate for eviction.  A value of "1" means that the cache line has "not been recently used," and may be evicted.  Re-referencing a cache line causes its NRU state to be set to 0.
+Not Recently Used, or NRU, is a simplification of the mechanism and storage overheads in LRU, and is similar in operation to the clock algorithm in page replacement.  There is 1 bit of state maintained per cache line in a set.  A value of 0 means that the cache line has been ``recently used,'' and is therefore not a candidate for eviction.  A value of ``1'' means that the cache line has ``not been recently used,'' and may be evicted.  Re-referencing a cache line causes its NRU state to be set to 0.
 
 The eviction victim is found by linearly scanning through the NRU state bits in a set (in a left-to-right fashion) and evicting the cache line corresponding to the first 1 encountered.  If no 1s are encountered, then all NRU bits are changed to 1 and the same victim selection process is repeated, i.e., the cache line in way 0 will be evicted.
 
@@ -69,13 +69,13 @@ SRRIP works by assigning an RRPV of 2 to each cache line when it is initially br
 
 \subsubsection{BRRIP}
 
-"Bimodal RRIP," or BRRIP is similar to SRRIP, and varies only in the initial RRPV of cache lines when they are first brought into the cache.  Whereas SRRIP always assigns an RRPV of 2 to incoming cache lines, BRRIP assigns an RRPV of 3 95\% of the time, and an RRPV of 2 only 5\% of the time.  This offers resistance to scans through memory that may otherwise thrash the cache.  In the absence of cache line reuse, BRRIP results in only a single way of each set being thrashed, rather than every way, as can happen in LRU, NRU, or SRRIP.
+Bimodal RRIP, or BRRIP is similar to SRRIP, and varies only in the initial RRPV of cache lines when they are first brought into the cache.  Whereas SRRIP always assigns an RRPV of 2 to incoming cache lines, BRRIP assigns an RRPV of 3 95\% of the time, and an RRPV of 2 only 5\% of the time.  This offers resistance to scans through memory that may otherwise thrash the cache.  In the absence of cache line reuse, BRRIP results in only a single way of each set being thrashed, rather than every way, as can happen in LRU, NRU, or SRRIP.
 
 The mechanisms of scanning through the set to find an RRPV of 3, and incrementing all RRPVs if a 3 is not found, are identical to SRRIP.
 
 \subsubsection{DRRIP}
 
-"Dynamic RRIP," or DRRIP, chooses to use either SRRIP or BRRIP at run-time, depending on which cache replacement policy is currently more effective at minimizing cache misses.  This is done by permanently assigning a small number of sets in the cache to always follow the SRRIP policy, and permanently assigning a small number of other sets to always follow the BRRIP policy.  Each cache miss in a SRRIP-only set will increment a policy selection counter, and each cache miss in a BRRIP-only set will decrement the policy selection counter.
+Dynamic RRIP, or DRRIP, chooses to use either SRRIP or BRRIP at run-time, depending on which cache replacement policy is currently more effective at minimizing cache misses.  This is done by permanently assigning a small number of sets in the cache to always follow the SRRIP policy, and permanently assigning a small number of other sets to always follow the BRRIP policy.  Each cache miss in a SRRIP-only set will increment a policy selection counter, and each cache miss in a BRRIP-only set will decrement the policy selection counter.
 
 Depending on the value of the policy selection counter, either SRRIP or BRRIP will be considered to currently be causing more cache misses than the other.  The remaining cache sets that are not permenantly assigned to follow a specific cache replacement policy will then use the cache replacement policy of whichever candidate policy is currently causing the fewest cache misses.
 
