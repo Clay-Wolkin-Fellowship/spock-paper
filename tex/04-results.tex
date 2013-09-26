@@ -1,58 +1,30 @@
 \section{Results}
-We present results from XXXX, XXXX, etc. from simulations with these
-parameters.
+We present results from Belady, Random, and all of the RRIP policies (SRRIP, DRRIP, BRRIP).
 
-Table + charts here.
+Figures~\ref{wttr:buc:all} display results for WTTR.
 
-Figures~\ref{wttr:cum:all} and~\ref{wttr:buc:all} display results for WTTR.
-
+\newcommand{\mkfigure}[4]{
 \begin{figure}
 \begin{center}
-\includegraphics[width=\columnwidth]{{img/wttr/cum/sp_omp.belady-rand-srrip-drrip-brrip}.png}
+\includegraphics[width=\columnwidth]{{img/#1/buc/sp_omp.#2}.png}
 \end{center}
-\caption{Cumulative WTTR for all tested policies}
-\label{wttr:cum:all}
+\caption{Bucketted \uppercase{#1} for #3}
+\label{#1:buc:#4}
 \end{figure}
+}
 
-\begin{figure}
-\begin{center}
-\includegraphics[width=\columnwidth]{{img/wttr/buc/sp_omp.belady-rand-srrip-drrip-brrip}.png}
-\end{center}
-\caption{Bucketted WTTR for all tested policies}
-\label{wttr:buc:all}
-\end{figure}
+\newcommand{\mksfigure}[2]{\mkfigure{#1}{#2}{\uppercase{#2}}{#2}}
 
+\newcommand{\mkallfigures}[1]{
+\mkfigure{#1}{belady-rand-srrip-drrip-brrip}{all test policies}{all}
+\mksfigure{#1}{belady}
+\mksfigure{#1}{rand}
+\mksfigure{#1}{srrip}
+\mksfigure{#1}{drrip}
+\mksfigure{#1}{brrip}
+}
 
-\begin{figure}
-\begin{center}
-\includegraphics[width=\columnwidth]{{img/matr/cum/sp_omp.belady-rand-srrip-drrip-brrip}.png}
-\end{center}
-\caption{Cumulative MATR for all tested policies}
-\label{matr:cum:all}
-\end{figure}
-
-
-\begin{figure}
-\begin{center}
-\includegraphics[width=\columnwidth]{{img/matr/buc/sp_omp.belady-rand-srrip-drrip-brrip}.png}
-\end{center}
-\caption{Bucketted MATR for all tested policies}
-\label{matr:buc:all}
-\end{figure}
-
-\begin{figure}
-\begin{center}
-\includegraphics[width=\columnwidth]{{img/mmtr/cum/sp_omp.belady-rand-srrip-drrip-brrip}.png}
-\end{center}
-\caption{Cumulative MMTR for all tested policies}
-\label{mmtr:cum:all}
-\end{figure}
-
-\begin{figure}
-\begin{center}
-\includegraphics[width=\columnwidth]{{img/mmtr/buc/sp_omp.belady-rand-srrip-drrip-brrip}.png}
-\end{center}
-\caption{Bucketted MMTR for all tested policies}
-\label{mmtr:buc:all}
-\end{figure}
+\mkallfigures{matr}
+\mkallfigures{mmtr}
+\mkallfigures{wttr}
 
