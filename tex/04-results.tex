@@ -1,12 +1,21 @@
 \section{Results}
-We present results from Belady, Random, and all of the RRIP policies (SRRIP, DRRIP, BRRIP).
+We present results from Belady, Random(rand), FIFO, and all of the RRIP policies (SRRIP, DRRIP, BRRIP).
+We limited the graphs to only show MATR because we believe that for this particular trace,
+ and this set of replacement polcies, this TTR best shows the usefulness of the TTR metrics in general.
 
-Figures~\ref{wttr:buc:all} display results for WTTR.
+Figures~\ref{matr:buc:belady}-\ref{matr:buc:brrip} show each individual replacement policy,
+ as well as the error in measurement due to our sampling strategy.
+Figures~\ref{matr:buc:belady:srrip}-\ref{matr:buc:drrip:brrip} show a side-by-side comparison of two different replacement policies.
+
+In each graph, any $(x,y)$ point corresponds to $y$ evictions that took $x$ thousand memory acceses to be recached.
+To smooth out the graph, these points have been collected into $1000$ buckets,
+ each bucket represents an area of 500 Memory Access.
+ 
 
 \newcommand{\mkfigure}[4]{
 \begin{figure}
 \begin{center}
-\includegraphics[width=\columnwidth]{{img/#1/buc/sp_omp.#2}.png}
+\includegraphics[width=\columnwidth]{{img/sp_omp.#2}.png}
 \end{center}
 \caption{Bucketted \uppercase{#1} for #3}
 \label{#1:buc:#4}
@@ -14,17 +23,23 @@ Figures~\ref{wttr:buc:all} display results for WTTR.
 }
 
 \newcommand{\mksfigure}[2]{\mkfigure{#1}{#2}{\uppercase{#2}}{#2}}
+\newcommand{\mkvsfigure}[3]{\mkfigure{#1}{#2-#3}{\uppercase{#2} vs. \uppercase{#3}}{#2:#3}}
 
 \newcommand{\mkallfigures}[1]{
-\mkfigure{#1}{belady-rand-srrip-drrip-brrip}{all test policies}{all}
 \mksfigure{#1}{belady}
 \mksfigure{#1}{rand}
+\mksfigure{#1}{fifo}
 \mksfigure{#1}{srrip}
 \mksfigure{#1}{drrip}
 \mksfigure{#1}{brrip}
+\mkvsfigure{#1}{belady}{srrip}
+\mkvsfigure{#1}{belady}{rand}
+\mkvsfigure{#1}{belady}{drrip}
+\mkvsfigure{#1}{srrip}{rand}
+\mkvsfigure{#1}{srrip}{drrip}
+\mkvsfigure{#1}{srrip}{fifo}
+\mkvsfigure{#1}{drrip}{brrip}
 }
 
 \mkallfigures{matr}
-\mkallfigures{mmtr}
-\mkallfigures{wttr}
 
