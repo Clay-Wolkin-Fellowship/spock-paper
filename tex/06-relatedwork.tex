@@ -10,7 +10,7 @@ related work the
 studies whose approach explicitly looks at reuse distance or some
 variation of it as a part of its design or motivation.
 
-SCAVENGER CITATION investigates the concept of eviction-use distance
+Basu et. al.~\cite{basukirman07} investigate the concept of eviction-use distance
 as motivation for their Scavenger LLC architecture, which identifies
 cache blocks that are recently missed in the LLC, and then puts them
 into a separate region of cache that protects them from their frequent
@@ -21,7 +21,7 @@ for several benchmarks.  This differs from TTR visualization in that
 they distilled the entire phenomenon down into a single value, and
 TTR visualization shows the spectrum of all eviction-use distances.
 
-Keramidas et. al. CITATION, seek to genuinely predict the reuse
+Keramidas et. al.~\cite{keramidaspetoumenos07}, seek to genuinely predict the reuse
 distance of cache blocks by using the program counter (PC) of a memory
 access to index into a predictor structure, which is updated when a
 reuse has been detected.  TTR visualization does not take the PC of
@@ -29,13 +29,13 @@ memory operations into account when plotting out recaching time,
 although it could be interesting for future work to look at the TTR
 graphs for each individual memory operation PC in a program.
 
-Manikantan et. al. CITATION, identify delinquent memory operation PCs
+Manikantan et. al.~\cite{manikantanrajan11}, identify delinquent memory operation PCs
 and track
 histograms of the next-use of the cache blocks brought in by them.
 Some of the ways of the LLC are dedicated to blocks brought in by the
 delinquent PCs, so that they do not pollute the rest of the ways.
 This work only tracks reuse within a few dozen LLC misses of when a
-block is last accessed, so their notion of reuse is much mor
+block is last accessed, so their notion of reuse is much more
 resitricted than that in TTR visualization.
 
 Other replacement policies (SHIPP, etc.)...
