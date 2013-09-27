@@ -1,7 +1,27 @@
 \section{Conclusions}
-TTR is the right thing to do if you want to achieve a human
-understanding of your cache behavior.
-MATR is close enough to the best while being easy to simulate to be
-useful. 
-We are releasing our source code, so feel free to use it to evaluate
-your own system. 
+In this work we have presented a class of metrics for cache studies
+that provide deeper insight into the behavior of the replacement
+algorithm when used for a particular application.
+When Belady's algorithm is used, one can discover inflection points
+that cause poor cache performance in the application.
+A comparison between TTR for Belady's algorithm and any set of
+replacement policies can provide insight for cache designers to choose
+replacement policies that are appropriate for the class of
+applications that the designer deems important.
+Furthermore, our sampling technique allows for quick iteration in
+policy design with rapid feedback to the developer.
+MATR was reasonably straightforward to capture in our simulations, but
+other types of TTR may be more useful or easy to record in other
+contexts.
+
+While we have presented these metrics in the context of CPU caches,
+the potential application for these techniques extends beyond CPU
+cache design.
+For example, large web applications employ DRAM as a cache for large
+databases held on arrays of disc drives as a method for increasing
+input and output operation throughput.
+Additionally, other application specific integrated circuits and
+processors that utilize caching may find TTR useful.
+In order to assist others in using our techniques, we have released
+our source code publicly (reference withheld) and encourage revisions
+and additions as appropriate for other domains.
