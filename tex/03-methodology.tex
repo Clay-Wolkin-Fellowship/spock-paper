@@ -31,7 +31,7 @@ Accessing a cache line for the first time causes it to be added to the cache.  W
 
 \subsubsection{Belady}
 
-Belady's algorithm was proposed in the context of page replacement, but its principle also applies in cache replacement.  The algorithm is to choose the cache line to be evicted whose next access is furthest in the future.  This is the optimal cache replacement strategy, but it requires oracle knowledge of the total order of all memory accesses in the program, which is not generally knowable at the time of cache replacement.  We show TTR results for Belady's algorithm anyway as an optimal baseline to compare the other cache replacement algorithms against.
+Belady's algorithm~\cite{belady66} was proposed in the context of page replacement, but its principle also applies in cache replacement.  The algorithm is to choose the cache line to be evicted whose next access is furthest in the future.  This is the optimal cache replacement strategy, but it requires oracle knowledge of the total order of all memory accesses in the program, which is not generally knowable at the time of cache replacement.  We show TTR results for Belady's algorithm anyway as an optimal baseline to compare the other cache replacement algorithms against.
 
 \subsubsection{Random}
 
@@ -63,19 +63,19 @@ NRU Random is similar to NRU, but rather than a linear scan through all of the N
 
 \subsubsection{SRRIP}
 
-Static Re-Reference Interval Prediction, or SRRIP, is similar to NRU, but it uses multiple bits to encode how recently a cache line has been used, and therefore how soon it is predicted to be used again.  For this study, we use 2 bits to encode the Re-Reference Prediction Values (RRPVs) for all RRIP-derived cache replacement algorithms, meaning that RRPVs are in the range of 0 to 3.  An RRPV of 0 means that the cache line was recently used, and is in little danger of eviction, and an RRPV of 3 means that the cache line was not recently used, and is in danger of imminent eviction.
+Static Re-Reference Interval Prediction~\cite{jaleeltheobald10}, or SRRIP, is similar to NRU, but it uses multiple bits to encode how recently a cache line has been used, and therefore how soon it is predicted to be used again.  For this study, we use 2 bits to encode the Re-Reference Prediction Values (RRPVs) for all RRIP-derived cache replacement algorithms, meaning that RRPVs are in the range of 0 to 3.  An RRPV of 0 means that the cache line was recently used, and is in little danger of eviction, and an RRPV of 3 means that the cache line was not recently used, and is in danger of imminent eviction.
 
 SRRIP works by assigning an RRPV of 2 to each cache line when it is initially brought into the cache.  Reuse of a cache line promotes its RRPV to 0.  Eviction victim selection is done by scanning through the set, left-to-right, and looking for a cache line whose RRPV is 3.  The first encountered 3 is evicted.  If no 3s are found, then all RRPVs in the set are incremented, and the scan to look for a 3 repeats.  This process may repeat several times until a 3 is found and evicted.
 
 \subsubsection{BRRIP}
 
-Bimodal RRIP, or BRRIP is similar to SRRIP, and varies only in the initial RRPV of cache lines when they are first brought into the cache.  Whereas SRRIP always assigns an RRPV of 2 to incoming cache lines, BRRIP assigns an RRPV of 3 95\% of the time, and an RRPV of 2 only 5\% of the time.  This offers resistance to scans through memory that may otherwise thrash the cache.  In the absence of cache line reuse, BRRIP results in only a single way of each set being thrashed, rather than every way, as can happen in LRU, NRU, or SRRIP.
+Bimodal RRIP~\cite{jaleeltheobald10}, or BRRIP is similar to SRRIP, and varies only in the initial RRPV of cache lines when they are first brought into the cache.  Whereas SRRIP always assigns an RRPV of 2 to incoming cache lines, BRRIP assigns an RRPV of 3 95\% of the time, and an RRPV of 2 only 5\% of the time.  This offers resistance to scans through memory that may otherwise thrash the cache.  In the absence of cache line reuse, BRRIP results in only a single way of each set being thrashed, rather than every way, as can happen in LRU, NRU, or SRRIP.
 
 The mechanisms of scanning through the set to find an RRPV of 3, and incrementing all RRPVs if a 3 is not found, are identical to SRRIP.
 
 \subsubsection{DRRIP}
 
-Dynamic RRIP, or DRRIP, chooses to use either SRRIP or BRRIP at run-time, depending on which cache replacement policy is currently more effective at minimizing cache misses.  This is done by permanently assigning a small number of sets in the cache to always follow the SRRIP policy, and permanently assigning a small number of other sets to always follow the BRRIP policy.  Each cache miss in a SRRIP-only set will increment a policy selection counter, and each cache miss in a BRRIP-only set will decrement the policy selection counter.
+Dynamic RRIP~\cite{jaleeltheobald10}, or DRRIP, chooses to use either SRRIP or BRRIP at run-time, depending on which cache replacement policy is currently more effective at minimizing cache misses.  This is done by permanently assigning a small number of sets in the cache to always follow the SRRIP policy, and permanently assigning a small number of other sets to always follow the BRRIP policy.  Each cache miss in a SRRIP-only set will increment a policy selection counter, and each cache miss in a BRRIP-only set will decrement the policy selection counter.
 
 Depending on the value of the policy selection counter, either SRRIP or BRRIP will be considered to currently be causing more cache misses than the other.  The remaining cache sets that are not permenantly assigned to follow a specific cache replacement policy will then use the cache replacement policy of whichever candidate policy is currently causing the fewest cache misses.
 
