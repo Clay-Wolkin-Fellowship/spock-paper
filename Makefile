@@ -11,7 +11,7 @@ clean:
 
 docs: build/docs/spock.pdf
 
-build/docs/%.pdf : tex/%.tex tex/*.tex bib/main.bib
+build/docs/spock.pdf: bib/main.bib $(wildcard tex/*.tex) $(wildcard img/*.png)
 	@mkdir -p $(@D)
-	$(TEX) $< $@ bib/main.bib
+	$(TEX) tex/$(basename $(@F)).tex $@ bib/main.bib
 
