@@ -38,8 +38,9 @@ In this work we propose the Time to Recache (TTR) methodology for examining the 
 TTR is defined as the amount of time (measured in a variety of different manners) that a cache block spends outside of the cache after it has been evicted and before it is accessed again.
 Note that this is distinct from the concept of reuse distance. 
 Reuse distance is the time between successive accesses to a piece of data or cache block. 
-TTR does not take into account the amount of time a cache block spent in the LLC before it was evicted.  
-TTR is only tracks the time spent after eviction and before reuse.
+TTR does not take into account the amount of time a cache block spent in the cache before it was evicted.
+Unlike TTR, reuse distance is independent of a replacement policy, and is therefore not very useful in analyzing a replacement policy.
+TTR only tracks the time spent after eviction and before reuse, making it dependent on the replacement policy based on when the cache block was evicted.
 In this paper, we propose the use of three variants of the TTR metric. 
 
 \textbf{WTTR:}
@@ -62,7 +63,7 @@ It is impossible to know at runtime for general workloads which cache block has 
 
 Measuring the IPC and MPKI of a workload using one caching policy,
  and comparing that to the IPC and MPKI of running that workload with a different caching policy can give you some sense of how close each of those caching policy comes to the optimal solution.
-This is, however, and indirect approach to quantifying how well a caching policy is performing.
+This is, however, an indirect approach to quantifying how well a caching policy is performing.
 Tracking the TTR is a direct means of comparing two caching policies.
 
 TTR is an effective metric because it asks the question every time a cache block is brought into the cache,
