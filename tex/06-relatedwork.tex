@@ -12,7 +12,7 @@ Basu et. al.~\cite{basukirman07} investigate the concept of eviction-use distanc
 as motivation for their Scavenger LLC architecture, which identifies
 cache blocks that are recently missed in the LLC, and then puts them
 into a separate region of cache that protects them from their frequent
-eviction.  In their motivation for this work, SCAVEGNER CITATION
+eviction.  In their motivation for this work,
 mentions large Eviction-Use distance as one of the major contributors
 to the problem and presents static values for Eviction-Use distance
 for several benchmarks.  This differs from TTR visualization in that
@@ -36,25 +36,3 @@ This work only tracks reuse within a few dozen LLC misses of when a
 block is last accessed, so their notion of reuse is much more
 resitricted than that in TTR visualization.
 
-Other replacement policies (SCHIP, etc.)...
-
-%The methods used
-%in this paper attempt to make the decision primarily based on how
-%recently each line was last used. Another metric for anticipating
-%line
-%reuse is to track the frequency with which each line is
-%accessed. Traditionally\cite{belady66}, a LFU policy would evict the
-%line that is used least frequently while the LRU policy evicts based
-%on the least recently accessed line. Several studies have used a
-%hybrid approach to improve the
-%performance\cite{leechoi01,oneiloneil93,robinsondevarakonda90}
-%but they require several parameters to be tuned on a per-workload
-%basis. Self-tuning adaptive
-%policies\cite{megiddomodha03,bansalmodha04,subramaniansmaragdakis06}
-%exist, however they significantly increase the hardware overhead and
-%complexity. The hardware overhead and complexity can be reduced via
-%hybrid cache
-%replacement\cite{qureshijaleel07}. Hybrid cache replacement uses set
-%dueling to dynamically choose between multiple replacement policies,
-%which can lead to increased performance, but necessitates additional
-%hardware and verification.
