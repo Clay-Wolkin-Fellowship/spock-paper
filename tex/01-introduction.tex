@@ -2,15 +2,15 @@
 Caching is used in processor design to keep data close to the computational units.
 This reduces memory access latency, which in turn reduces the cycles per instruction (CPI) of a program, ideally improving system performance.
 In an effort to improve the effectiveness of caches, a variety of cache policies have been proposed.
-Laszlo Belady~\cite{belady66} proposed an optimal algorithm that involves always evicts the memory that will be used furthest in the future.
+Laszlo Belady~\cite{belady66} proposed an optimal algorithm that involves always evicting the cache block that will be next used furthest in the future.
 Unfortunately this requires knowing ahead of time what memory the program will access and the order in which that memory will be accessed.
 Online algorithms have been developed to approximate Belady's algorithms,
 	these include Least Recently Used (LRU), Not Recently Used (NRU),
 	and more recently Re-reference Interval Predicition (RRIP)~\cite{jaleeltheobald10},
-	in both Static RRIP (SRRIP) and Dynamic RRIP (DRRIP).
+	in the forms of Static RRIP (SRRIP), Bimodal RRIP (BRRIP), and Dynamic RRIP (DRRIP).
 LRU and NRU were proposed on the basis that if a processor just used a cache block,
 	it is likely to be used sooner than a cache block it has not used in a while.
-The RRIP policies attempt to propose the future usefulness of cache blocks,
+The RRIP policies attempt to determine the future usefulness of cache blocks,
 	and evicting cache blocks that are not likely to be used in the future.
 These policies are discussed at length in Section~\ref{sec:policies}
 
