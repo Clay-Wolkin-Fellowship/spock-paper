@@ -1,20 +1,20 @@
 \section{Introduction}
 Caching is used in processor design to keep data close to the computational units.
-This reduces memory access latency, which in turn reduces the cycles per instruction (CPI) of a program.
+This reduces memory access latency, which in turn reduces the cycles per instruction (CPI) of a program, ideally improving system performance.
 In an effort to improve the effectiveness of caches, a variety of cache policies have been proposed.
-Belady proposed an optimal cache algorithm that involves always evicting the cache block that will be used furthest in the future.
-Unfortunately this requires knowing ahead of time what memory the program will access.
+Laszlo Belady~\cite{belady66} proposed an optimal algorithm that involves always evicts the memory that will be used furthest in the future.
+Unfortunately this requires knowing ahead of time what memory the program will access and the order in which that memory will be accessed.
 Online algorithms have been developed to approximate Belady's algorithms,
 	these include Least Recently Used (LRU), Not Recently Used (NRU),
 	and more recently Re-reference Interval Predicition (RRIP)~\cite{jaleeltheobald10},
-	in both Static RRIP (SRIPP) and Dynamic RRIP (DRIPP).
+	in both Static RRIP (SRRIP) and Dynamic RRIP (DRRIP).
 LRU and NRU were proposed on the basis that if a processor just used a cache block,
 	it is likely to be used sooner than a cache block it has not used in a while.
 The RRIP policies attempt to propose the future usefulness of cache blocks,
 	and evicting cache blocks that are not likely to be used in the future.
-These policies are discussed at length in section \ref{sec:policies}
+These policies are discussed at length in Section~\ref{sec:policies}
 
-In this paper we propose the use of a class of Time to Recache (TTR) metric in offering insight into why different cache management policies perform better than others.  
+In this paper we propose the use of a class of Time to Recache (TTR) metrics in offering insight into why different cache management policies perform better than others.  
 There are a variety of different ways to measure TTR, including Memory Accesses to Recache (MATR), Memory Misses to Reacache (MMTR), Wall-time to Recache (WTTR). 
 This class of metrics refers to the time spent by a cache line after it has been evicted from the cache and before being fetched again.  
 It is related to, but distinct from, the notion of ``reuse distance,'' which refers to the amount of time between successive accesses to a given cache block.
