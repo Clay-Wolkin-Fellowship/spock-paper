@@ -56,7 +56,7 @@ All of the other evaluated cache replacement policies will behave differently be
 First In First Out, or FIFO, chooses the cache line to evict from the set that has been in the cache longest.  Neither reuse, nor any other factors, has any bearing in deciding which cache line to evict in the FIFO algorithm.  This algorithm requires only enough per-set state to point to the cache line in that set that will be evicted and replaced next.
 \subsubsection{LRU}
 
-Least Recently Used, or LRU, choose to evict the cache line from the set whose most recent access was furthest in the past.  Conceptually this works like a queue, where eviction candidates are always chosen from the tail of the queue, and both initial use and subsequent reuse promotes cache lines to the front of the queue, furthest away from being in danger of eviction. In the absence of cache line reuse, this algorithm behaves identically to FIFO.  This algorithm requires enough state per cache line to enforce an absolute order between all members of a set, typically log2(N) bits per cache line, where N is the associativity of the set.
+Least Recently Used, or LRU, choose to evict the cache line from the set whose most recent access was furthest in the past.  Conceptually this works like a queue, where eviction candidates are always chosen from the tail of the queue, and both initial use and subsequent reuse promotes cache lines to the front of the queue, furthest away from being in danger of eviction. In the absence of cache line reuse, this algorithm behaves identically to FIFO.  This algorithm requires enough state per cache line to enforce an absolute order between all members of a set, typically log$_2$(N) bits per cache line, where N is the associativity of the set.
 
 \comment{
 \subsubsection{MRU}
@@ -65,9 +65,10 @@ Most Recently Used, or MRU, behaves in the opposite way of LRU.  The same state 
 }
 \subsubsection{NRU}
 
-Not Recently Used, or NRU, is a simplification of the mechanism and storage overheads in LRU, and is similar in operation to the clock algorithm in page replacement.  There is 1 bit of state maintained per cache line in a set.  A value of 0 means that the cache line has been ``recently used,'' and is therefore not a candidate for eviction.  A value of ``1'' means that the cache line has ``not been recently used,'' and may be evicted.  Re-referencing a cache line causes its NRU state to be set to 0.
+Not Recently Used, or NRU, is a simplification of the mechanism and storage overheads in LRU, and is similar in operation to the clock algorithm in page replacement.  There is 1 bit of state maintained per cache line in a set.  A value of ``0'' means that the cache line has been ``recently used,'' and is therefore not a candidate for eviction.  A value of ``1'' means that the cache line has ``not been recently used,'' and may be evicted.  Re-referencing a cache line causes its NRU state to be set to ``0''.
 
-The eviction victim is found by linearly scanning through the NRU state bits in a set (in a left-to-right fashion) and evicting the cache line corresponding to the first 1 encountered.  If no 1s are encountered, then all NRU bits are changed to 1 and the same victim selection process is repeated, i.e., the cache line in way 0 will be evicted.
+The eviction victim is found by linearly scanning through the NRU state bits in a set (in a left-to-right fashion) and evicting the cache line corresponding to the first ``1'' encountered. 
+If no ``1''s are encountered, then all NRU bits are changed to 1 and the same victim selection process is repeated, i.e., the cache line in way ``0'' will be evicted.
 \comment{
 \subsubsection{NRU Random}
 
