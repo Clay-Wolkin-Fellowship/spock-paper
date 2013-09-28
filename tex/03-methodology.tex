@@ -13,7 +13,7 @@ overall behavior for the application in question.
 
 We chose to use the NAS Parallel Benchmarks~\cite{bailey94} as a set of reference programs to explore our metrics.
 We specifically ended up using sp\_omp with only one thread in this paper because it showed the most interesting results.
-PIN~\cite{lukcohn} was used to get a memory trace of the program,
+PIN~\cite{lukcohn05} was used to get a memory trace of the program,
  then this memory trace was sample as discussed in \ref{sec:sampling},
  and then run through a Cache policy simulator, which we wrote in Python.
 
