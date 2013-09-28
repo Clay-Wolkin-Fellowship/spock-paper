@@ -1,8 +1,8 @@
 \section{Analysis}
 
 
-We chose sp\_omp because it showed an interesting distribution of Memory Accesses to Recache (MATR).
-We have plotted several replacement policies against each other to show the difference between these polcies.
+We chose sp\_omp because it showed an interesting distribution of MATR results.
+We have plotted several replacement policies against each other to show the difference between these policies.
 Specifically we have plotted replacement algorithms against Belady's Optimal Algorithm to find out what these policies could do better.
 As you can see all cache algorithms have a lot of replacements under 100 K memory accesses from eviction.
 However, there are also three peaks around 250 K, 300 K, and 350 K memory accesses.
@@ -12,7 +12,7 @@ A high Y value is generally bad, because it means there were many evictions and 
  (the program however could possibly be rewritten).
 Many TTR graphs include humps in their distribution, humps that appear significantly later than any equivalent hump in Belady are bad,
  this means that you are holding onto data for too long.
-Humps that do no appear at all in Belady, means that it would be optimal to hold the data long enough for the second recache to occur,
+Humps that do no appear at all in Belady, means that it would be optimal to hold the data long enough for the next memory access to occur,
  in this case your caching policy does not hold onto data long enough.
 
 For instance in Figures~\ref{matr:buc:belady:srrip},\ref{matr:buc:belady:rand},\ref{matr:buc:belady:drrip} we see many peaks at less then 100 K memory accesses in SRRIP, RAND, and DRRIP.
