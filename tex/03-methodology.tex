@@ -53,7 +53,7 @@ All of the other evaluated cache replacement policies will behave differently be
 \subsubsection{FIFO}
 
 First In First Out, or FIFO, chooses the cache line to evict from the set that has been in the cache longest.  Neither reuse, nor any other factors, has any bearing in deciding which cache line to evict in the FIFO algorithm.  This algorithm requires only enough per-set state to point to the cache line in that set that will be evicted and replaced next.
-
+\comment{
 \subsubsection{LRU}
 
 Least Recently Used, or LRU, choose to evict the cache line from the set whose most recent access was furthest in the past.  Conceptually this works like a queue, where eviction candidates are always chosen from the tail of the queue, and both initial use and subsequent reuse promotes cache lines to the front of the queue, furthest away from being in danger of eviction. In the absence of cache line reuse, this algorithm behaves identically to FIFO.  This algorithm requires enough state per cache line to enforce an absolute order between all members of a set, typically log2(N) bits per cache line, where N is the associativity of the set.
@@ -71,7 +71,7 @@ The eviction victim is found by linearly scanning through the NRU state bits in 
 \subsubsection{NRU Random}
 
 NRU Random is similar to NRU, but rather than a linear scan through all of the NRU bits to evict the first encountered 1, a random cache line is chosen whose NRU bit is set to 1.  Again, if there are no cache lines have an NRU bit value of 1, then all cache lines NRU bits are changed to 1.
-
+}
 \subsubsection{SRRIP}
 
 Static Re-Reference Interval Prediction~\cite{jaleeltheobald10}, or SRRIP, is similar to NRU, but it uses multiple bits to encode how recently a cache line has been used, and therefore how soon it is predicted to be used again.  For this study, we use 2 bits to encode the Re-Reference Prediction Values (RRPVs) for all RRIP-derived cache replacement algorithms, meaning that RRPVs are in the range of 0 to 3.  An RRPV of 0 means that the cache line was recently used, and is in little danger of eviction, and an RRPV of 3 means that the cache line was not recently used, and is in danger of imminent eviction.
