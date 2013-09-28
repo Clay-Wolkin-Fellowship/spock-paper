@@ -16,7 +16,7 @@ To smooth out the graph, these points have been collected into $1000$ buckets,
 \newcommand{\mkfigure}[4]{
 \begin{figure}
 \begin{center}
-\includegraphics[width=\columnwidth]{{img/sp_omp.#2}.png}
+\includegraphics[width={0.9\columnwidth}]{{img/sp_omp.#2}.png}
 \end{center}
 \caption{Bucketed \uppercase{#1} for #3}
 \label{#1:buc:#4}
@@ -25,7 +25,6 @@ To smooth out the graph, these points have been collected into $1000$ buckets,
 
 \newcommand{\mksfigure}[2]{\mkfigure{#1}{#2}{\uppercase{#2}}{#2}}
 \newcommand{\mkvsfigure}[3]{\mkfigure{#1}{#2-#3}{\uppercase{#2} vs. \uppercase{#3}}{#2:#3}}
-
 \newcommand{\mkallfigures}[1]{
 \mksfigure{#1}{belady}
 \mksfigure{#1}{rand}
@@ -41,6 +40,5 @@ To smooth out the graph, these points have been collected into $1000$ buckets,
 \mkvsfigure{#1}{srrip}{fifo}
 \mkvsfigure{#1}{drrip}{brrip}
 }
-
 \mkallfigures{matr}
 
