@@ -1,38 +1,99 @@
 \section{Related Work}
-Creating good cache line replacement policies is a well
-studied area of computer architecture, and several recent papers have
-worked on this problem.  In general it is the goal of every cache
-policy design to keep around truly reused data while evicting data
-that will not be reused for a very long time, but we mention here as
-related work the
-studies whose approach explicitly looks at reuse distance or some
-variation of it as a part of its design or motivation.
+
+Effective management of the contents of the last level of cache can
+be greatly beneficial to the performance of a processor.  It can 
+lower average memory access latency, and conserve off-chip memory 
+bandwidth.  In this section, we discuss some recent attempts at improving
+the contents of the last level of cache, and how they relate to the TTR 
+metric.  We also discuss other tools
+and visualization techniques that have been proposed to improve cache
+performance by influencing the way code is written.
+
+%Creating good cache line replacement policies is a well
+%studied area of computer architecture, and several recent papers have
+%worked on this problem.  In general it is the goal of every cache
+%policy design to keep around truly reused data while evicting data
+%that will not be reused for a very long time, but we mention here as
+%related work the
+%studies whose approach explicitly looks at reuse distance or some
+%variation of it as a part of its design or motivation.
+
+Lai and Falsafi~\cite{Lai00} use the idea of dead block prediction to 
+anticipate when the last touch of a cache line would be before it is naturally
+evicted from the cache.  Their main observation is that the last access to a cache
+line occurs long before it becomes the LRU cache line in a set and is chosen
+for eviction, so they instead try to evict a cache block as soon as it is predicted
+to no longer be useful.  This can directly influence the TTR of cache lines by evicting a line before a 
+regular replacement policy would choose to do so, thereby giving it more time to spend outside of the cache 
+before it is recached.
 
 Basu et. al.~\cite{basukirman07} investigate the concept of eviction-use distance
 as motivation for their Scavenger LLC architecture, which identifies
 cache blocks that are recently missed in the LLC, and then puts them
 into a separate region of cache that protects them from their frequent
-eviction.  In their motivation for this work,
-mentions large Eviction-Use distance as one of the major contributors
-to the problem and presents static values for Eviction-Use distance
-for several benchmarks.  This differs from TTR visualization in that
-they distilled the entire phenomenon down into a single value, and
-TTR visualization shows the spectrum of all eviction-use distances.
+eviction.  
+Seshadri et. al.~\cite{seshadri12} do something similar with their eviction address
+filter.  They use a Bloom filter to identify cache lines that are returning to the
+cache recently after having been evicted, and these cache lines are given lower
+initial RRPVs.
+These technique can improve TTR metrics by identifying and 
+offering eviction resistance to a subset ofthe most
+often thrashed cache lines, favoring instead to evict cache lines that are
+unlikely to be immediately reused.
 
-Keramidas et. al.~\cite{keramidaspetoumenos07}, seek to genuinely predict the reuse
-distance of cache blocks by using the program counter (PC) of a memory
-access to index into a predictor structure, which is updated when a
-reuse has been detected.  TTR visualization does not take the PC of
-memory operations into account when plotting out recaching time,
-although it could be interesting for future work to look at the TTR
-graphs for each individual memory operation PC in a program.
+%In their motivation for this work, SCAVEGNER CITATION
+%mentions large Eviction-Use distance as one of the major contributors
+%to the problem and presents static values for Eviction-Use distance
+%for several benchmarks.  This differs from TTR visualization in that
+%they distilled the entire phenomenon down into a single value, and
+%TTR visualization shows the spectrum of all eviction-use distances.
 
-Manikantan et. al.~\cite{manikantanrajan11}, identify delinquent memory operation PCs
-and track
-histograms of the next-use of the cache blocks brought in by them.
+%Keramidas et. al.~\cite{keramidaspetoumenos07}, seek to precisely predict the reuse
+%distance of cache blocks by using the program counter (PC) of a memory
+%access to index into a predictor structure, which is updated when a
+%reuse has been detected.  TTR visualization does not take the PC of
+%memory operations into account when plotting out recaching time,
+%although it could be interesting for future work to look at the TTR
+%graphs for each individual memory operation PC in a program.
+
+Manikantan et. al.~\cite{manikantanrajan11}, identify delinquent memory operation instruction addresses
+and track histograms of the next-use of the cache blocks brought in by them.
 Some of the ways of the LLC are dedicated to blocks brought in by the
 delinquent PCs, so that they do not pollute the rest of the ways.
-This work only tracks reuse within a few dozen LLC misses of when a
-block is last accessed, so their notion of reuse is much more
-resitricted than that in TTR visualization.
+Their work takes a different approach to improving the quality of the contents of the cache
+by trying to prefer to evict offending data rather than to explicitly protect useful data.  This would 
+improve TTR data by evicting useless data early, and allowing useful data to have longer cache residence.
 
+Some research has also been done in the area of cache performance visualization.
+Choudhury and Rosen~\cite{choudhury2011} developed a visualization tool that 
+tracks individual cache lines as they move from main memory through the
+various levels of the cache, and as they are inserted, reused, and evicted 
+from each cache level.  This tool was developed in the context of trying
+to see with a graphical interface how the code a programmer wrote intereacts with the cache hierarchy,
+and is not directly meant to be a means to evaluate the quality of cache management strategies, as TTR is.
+
+%Their work only tracks reuse within a few dozen LLC misses of when a
+%block is last accessed, so their notion of reuse is much more
+%resitricted than that in TTR visualization.
+
+
+%The methods used
+%in this paper attempt to make the decision primarily based on how
+%recently each line was last used. Another metric for anticipating
+%line
+%reuse is to track the frequency with which each line is
+%accessed. Traditionally\cite{belady66}, a LFU policy would evict the
+%line that is used least frequently while the LRU policy evicts based
+%on the least recently accessed line. Several studies have used a
+%hybrid approach to improve the
+%performance\cite{leechoi01,oneiloneil93,robinsondevarakonda90}
+%but they require several parameters to be tuned on a per-workload
+%basis. Self-tuning adaptive
+%policies\cite{megiddomodha03,bansalmodha04,subramaniansmaragdakis06}
+%exist, however they significantly increase the hardware overhead and
+%complexity. The hardware overhead and complexity can be reduced via
+%hybrid cache
+%replacement\cite{qureshijaleel07}. Hybrid cache replacement uses set
+%dueling to dynamically choose between multiple replacement policies,
+%which can lead to increased performance, but necessitates additional
+%hardware and verification.
