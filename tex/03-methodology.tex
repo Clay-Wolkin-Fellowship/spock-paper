@@ -1,8 +1,8 @@
 \newcommand{\SAMPN}{100}
-\newcommand{\SAMPK}{2000000}
-\newcommand{\SAMP}{1400000}
-\newcommand{\WARM}{100000}
-\newcommand{\COOL}{500000}
+\newcommand{\SAMPK}{2 million}
+\newcommand{\SAMP}{1.4 million}
+\newcommand{\WARM}{100 thousand}
+\newcommand{\COOL}{500 thousand}
 
 \section{Methodology}
 We simulate a set associative cache using a number of different
@@ -27,7 +27,13 @@ We sampled the file to minimize the data set we operated on, while maintaining t
 \subsection{Caching Policies}
 \label{sec:policies}
 
-Accessing a cache line for the first time causes it to be added to the cache.  We use some of the cache line address bits to decide which set the cache line maps to.  Each set is a *INSERT ASSOCIATIVITY*-way associative set, and when all of the ways in a set are filled, and we want to insert another cache line into the set, then one of the old cache lines must be selected for eviction to make way for new data. We test several different cache replacement policies which determine the cache line to be evicted in the event of an associativity conflict.  The new cache line is always placed in the same cache way that was vacated by the evicted data.
+Accessing a cache line for the first time causes it to be added to the cache.
+Each cache line contains 64 bytes of data.
+We use 7 of the cache line address bits to decide which set the cache line maps to.
+Each set is a 8-way associative set, and when all of the ways in a set are filled,
+ and we want to insert another cache line into the set, then one of the old cache lines must be selected for eviction to make way for new data.
+We test several different cache replacement policies which determine the cache line to be evicted in the event of an associativity conflict.
+The new cache line is always placed in the same cache way that was vacated by the evicted data.
 
 \subsubsection{Belady}
 
