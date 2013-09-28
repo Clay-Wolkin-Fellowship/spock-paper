@@ -37,7 +37,7 @@ filter.  They use a Bloom filter to identify cache lines that are returning to t
 cache recently after having been evicted, and these cache lines are given lower
 initial RRPVs.
 These technique can improve TTR metrics by identifying and 
-offering eviction resistance to a subset ofthe most
+offering eviction resistance to a subset of the most
 often thrashed cache lines, favoring instead to evict cache lines that are
 unlikely to be immediately reused.
 
@@ -69,7 +69,7 @@ Choudhury and Rosen~\cite{choudhury2011} developed a visualization tool that
 tracks individual cache lines as they move from main memory through the
 various levels of the cache, and as they are inserted, reused, and evicted 
 from each cache level.  This tool was developed in the context of trying
-to see with a graphical interface how the code a programmer wrote intereacts with the cache hierarchy,
+to see with a graphical interface how the code a programmer wrote interacts with the cache hierarchy,
 and is not directly meant to be a means to evaluate the quality of cache management strategies, as TTR is.
 
 %Their work only tracks reuse within a few dozen LLC misses of when a
