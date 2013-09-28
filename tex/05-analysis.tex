@@ -7,8 +7,8 @@ Specifically we have plotted replacement algorithms against Belady's Optimal Alg
 As you can see all cache algorithms have a lot of replacements under 100 K memory accesses from eviction.
 However, there are also three peaks around 250 K, 300 K, and 350 K memory accesses.
 The intuition of how to read a TTR graph is as follows.
-A high Y value is generally bad, because it means there were many evictions and recaches,
- however if Belady also has a high Y value, than this is a property of the program, and your caching policy cannot do better,
+A high $y$ value is generally bad, because it means there were many evictions and recaches,
+ however if Belady also has a high $y$ value, than this is a property of the program, and your caching policy cannot do better,
  (the program however could possibly be rewritten).
 Many TTR graphs include humps in their distribution, humps that appear significantly later than any equivalent hump in Belady are bad,
  this means that you are holding onto data for too long.
